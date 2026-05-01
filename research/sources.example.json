@@ -1,0 +1,230 @@
+{
+  "version": 2,
+  "source_classes": {
+    "direct": "Official disclosures, filings, regulators, issuer pages, and issuer factsheets.",
+    "class_a": "Public institutional research and market commentary.",
+    "corroborating_journalism": "Reputable journalism that corroborates or contextualises a thesis.",
+    "social": "Reddit and similar sources for discovery, sentiment, objections, and alternatives."
+  },
+  "stable_collectors": [
+    {
+      "id": "sec_edgar_submissions",
+      "name": "SEC EDGAR company submissions",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "sec_submissions_api",
+      "applies_to": ["US_STOCK", "US_LISTED_ADR"],
+      "base_url": "https://data.sec.gov/submissions/CIK##########.json",
+      "docs_url": "https://www.sec.gov/edgar/sec-api-documentation",
+      "notes": "No API key. Requires a 10-digit CIK. Use for 10-K, 10-Q, 8-K, 20-F, 6-K and other recent filings."
+    },
+    {
+      "id": "sec_companyfacts",
+      "name": "SEC EDGAR company facts",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "sec_companyfacts_api",
+      "applies_to": ["US_STOCK", "US_LISTED_ADR"],
+      "base_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK##########.json",
+      "docs_url": "https://www.sec.gov/edgar/sec-api-documentation",
+      "notes": "Use after filings are detected, not as a broad daily scrape."
+    },
+    {
+      "id": "federal_reserve_rss",
+      "name": "Federal Reserve RSS feeds",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "rss",
+      "applies_to": ["MACRO"],
+      "docs_url": "https://www.federalreserve.gov/feeds/feeds.htm",
+      "feeds": [
+        {
+          "label": "All press releases",
+          "url": "https://www.federalreserve.gov/feeds/press_all.xml"
+        },
+        {
+          "label": "Monetary policy press releases",
+          "url": "https://www.federalreserve.gov/feeds/press_monetary.xml"
+        }
+      ],
+      "notes": "Useful for rate, liquidity, and broad US market context."
+    },
+    {
+      "id": "companies_house",
+      "name": "Companies House API",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "companies_house_api",
+      "applies_to": ["UK_COMPANY"],
+      "docs_url": "https://developer.company-information.service.gov.uk/get-started",
+      "notes": "Requires an API key. Useful for UK company filings and officers, less useful for funds."
+    },
+    {
+      "id": "bank_of_england",
+      "name": "Bank of England news and monetary policy",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "public_page_or_feed",
+      "applies_to": ["MACRO", "UK_MARKET"],
+      "urls": [
+        "https://www.bankofengland.co.uk/news",
+        "https://www.bankofengland.co.uk/monetary-policy"
+      ],
+      "notes": "Use for UK rates, inflation, monetary policy, and sterling context."
+    },
+    {
+      "id": "ecb_press",
+      "name": "European Central Bank press releases",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "public_page_or_feed",
+      "applies_to": ["MACRO", "EU_MARKET"],
+      "urls": [
+        "https://www.ecb.europa.eu/press/html/index.en.html",
+        "https://www.ecb.europa.eu/press/press_conference/html/index.en.html"
+      ],
+      "notes": "Use for eurozone rate and macro context."
+    },
+    {
+      "id": "fca_news",
+      "name": "Financial Conduct Authority news",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "public_page",
+      "applies_to": ["UK_MARKET", "REGULATION"],
+      "url": "https://www.fca.org.uk/news",
+      "notes": "Useful for UK regulatory, promotions, scam, and fund-platform context."
+    },
+    {
+      "id": "issuer_factsheets",
+      "name": "Fund and ETF issuer factsheets",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "collector": "manual_url_registry",
+      "applies_to": ["UK_FUND", "ETF", "ETP"],
+      "notes": "Each user should add issuer URLs in research/sources.local.json for their own holdings."
+    }
+  ],
+  "manual_or_agent_sources": [
+    {
+      "id": "company_investor_relations",
+      "name": "Company investor relations and newsroom",
+      "source_class": "direct",
+      "evidence_role": "validation",
+      "use_for": "Earnings releases, official guidance, investor presentations, product or partnership announcements.",
+      "notes": "Prefer per-company URLs in sources.local.json because IR page structures vary."
+    },
+    {
+      "id": "reuters_business_markets",
+      "name": "Reuters business and markets coverage",
+      "source_class": "corroborating_journalism",
+      "evidence_role": "corroboration",
+      "use_for": "Context and corroboration. Use agent/web search unless a licensed or stable feed is configured.",
+      "domains": ["reuters.com"]
+    },
+    {
+      "id": "bbc_business",
+      "name": "BBC Business",
+      "source_class": "corroborating_journalism",
+      "evidence_role": "corroboration",
+      "use_for": "UK and broad business context.",
+      "domains": ["bbc.com", "bbc.co.uk"]
+    },
+    {
+      "id": "morningstar",
+      "name": "Morningstar research and fund pages",
+      "source_class": "class_a",
+      "evidence_role": "corroboration",
+      "use_for": "Fund research, valuation context, style boxes, manager commentary where public."
+    },
+    {
+      "id": "aj_bell",
+      "name": "AJ Bell public market research",
+      "source_class": "class_a",
+      "evidence_role": "opportunity",
+      "use_for": "UK investor-friendly fund and market commentary. Treat as idea/context, not final validation."
+    },
+    {
+      "id": "blackrock",
+      "name": "BlackRock and BlackRock Investment Institute insights",
+      "source_class": "class_a",
+      "evidence_role": "opportunity",
+      "use_for": "Macro, ETF, factor, and asset-allocation context."
+    },
+    {
+      "id": "jpmorgan",
+      "name": "J.P. Morgan market insights",
+      "source_class": "class_a",
+      "evidence_role": "opportunity",
+      "use_for": "Macro and portfolio strategy context."
+    },
+    {
+      "id": "goldman_sachs",
+      "name": "Goldman Sachs insights",
+      "source_class": "class_a",
+      "evidence_role": "opportunity",
+      "use_for": "Macro, sector, market, and theme context."
+    }
+  ],
+  "default_social_sources": {
+    "reddit": {
+      "source_class": "social",
+      "evidence_role": "sentiment",
+      "subreddits": [
+        "investing",
+        "ValueInvesting",
+        "Bogleheads",
+        "ETFs",
+        "SecurityAnalysis",
+        "UKInvesting",
+        "UKPersonalFinance",
+        "stocks"
+      ],
+      "blocked_subreddits": [
+        "wallstreetbets",
+        "pennystocks",
+        "shortsqueeze"
+      ],
+      "search_modes": [
+        "ticker",
+        "company name",
+        "competitors",
+        "why buy",
+        "why sell",
+        "alternatives"
+      ],
+      "notes": "Social data is for semantic discovery. It must not be used as standalone validation."
+    }
+  },
+  "entity_source_templates": {
+    "US_STOCK": {
+      "direct": [
+        "SEC EDGAR submissions API",
+        "company investor relations",
+        "official earnings releases"
+      ],
+      "corroborating_journalism": [
+        "Reuters company and market coverage",
+        "BBC Business where relevant"
+      ],
+      "social": [
+        "ticker and company-name searches in investing subreddits",
+        "competitor and alternative-investment discussion"
+      ]
+    },
+    "UK_FUND": {
+      "direct": [
+        "issuer factsheet",
+        "KIID or prospectus",
+        "fund manager commentary"
+      ],
+      "class_a": [
+        "Morningstar",
+        "AJ Bell public market research where available"
+      ],
+      "social": [
+        "fund, index, sector, and alternative-vehicle searches in investing subreddits"
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vmarket"
+version = "0.1.0"
+description = "Virtual Market — fake-money investing simulator using real daily prices"
+requires-python = ">=3.11"
+dependencies = [
+    "typer[all]>=0.12",
+    "rich>=13",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.0",
+    "requests>=2.31",
+    "pandas>=2.0",
+    "python-dotenv>=1.0",
+    "plotext>=5.2",
+    "plotly>=5.0",
+]
+
+[project.scripts]
+vmarket = "vmarket.cli:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-mock>=3",
+    "ruff>=0.4",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
