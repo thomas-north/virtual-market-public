@@ -1,16 +1,15 @@
 from datetime import date
 from decimal import Decimal
-from unittest.mock import patch
 
 import pytest
 
 from vmarket.dto.price_bar import PriceBarDTO
 from vmarket.errors import InsufficientCashError, InsufficientHoldingsError, NoPriceError
+from vmarket.repositories import instruments as inst_repo
+from vmarket.repositories import prices as price_repo
 from vmarket.services.cash_service import deposit
 from vmarket.services.trade_service import buy, sell
 from vmarket.services.watchlist_service import add_to_watchlist
-from vmarket.repositories import prices as price_repo
-from vmarket.repositories import instruments as inst_repo
 
 
 def _seed(session, cash: float = 10000.0):
@@ -21,7 +20,6 @@ def _seed(session, cash: float = 10000.0):
 
 def _mock_price(session, symbol: str, close: float):
     inst = inst_repo.get_by_symbol(session, symbol)
-    from vmarket.dto.price_bar import PriceBarDTO
     bars = [PriceBarDTO(
         symbol=symbol, date=date.today(),
         open=None, high=None, low=None,

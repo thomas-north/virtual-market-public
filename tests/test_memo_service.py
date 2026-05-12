@@ -1,13 +1,13 @@
 from datetime import date
 from decimal import Decimal
 
+from vmarket.dto.price_bar import PriceBarDTO
+from vmarket.repositories import instruments as inst_repo
+from vmarket.repositories import prices as price_repo
 from vmarket.services.cash_service import deposit
 from vmarket.services.memo_service import generate_daily_memo
-from vmarket.services.watchlist_service import add_to_watchlist
 from vmarket.services.trade_service import buy
-from vmarket.repositories import prices as price_repo
-from vmarket.repositories import instruments as inst_repo
-from vmarket.dto.price_bar import PriceBarDTO
+from vmarket.services.watchlist_service import add_to_watchlist
 
 
 def test_memo_contains_portfolio_summary(session):

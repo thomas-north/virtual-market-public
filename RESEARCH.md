@@ -21,7 +21,6 @@ Committed reusable paths:
 - `research/README.md`
 - `research/sources.example.json`
 - `vmarket/research/`
-- `.claude/commands/vm-research30.md`
 
 ## Operating Model
 

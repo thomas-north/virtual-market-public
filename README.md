@@ -32,7 +32,9 @@ Today, this public repo already supports:
 - daily market price sync
 - FX sync
 - portfolio valuation
+- standalone HTML overview reports
 - memo generation
+- schema migrations and data-quality diagnostics
 - research evidence storage and brief rendering
 
 The next public sync waves will add:
@@ -67,7 +69,9 @@ vmarket cash deposit 10000 --currency GBP
 vmarket watch add AAPL.US --name "Apple Inc" --currency USD --asset-type stock
 vmarket sync prices --days 30
 vmarket portfolio
+vmarket report overview
 vmarket memo daily
+vmarket doctor
 ```
 
 ---
@@ -134,8 +138,10 @@ Current public commands include:
 - `vmarket sell`
 - `vmarket trades`
 - `vmarket portfolio`
+- `vmarket doctor`
 - `vmarket chart ...`
 - `vmarket memo daily`
+- `vmarket report overview`
 - `vmarket research ...`
 
 Run:

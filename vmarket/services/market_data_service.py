@@ -14,6 +14,7 @@ from vmarket.repositories import portfolios as port_repo
 from vmarket.repositories import prices as price_repo
 from vmarket.repositories import trades as trade_repo
 from vmarket.repositories import watchlist as wl_repo
+from vmarket.services.freshness import is_manual_price_symbol
 
 
 @dataclass
@@ -21,6 +22,7 @@ class SyncResult:
     fetched: int = 0
     updated_bars: int = 0
     failed: list[str] = field(default_factory=list)
+    manual_priced: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
 
@@ -86,6 +88,14 @@ def sync_prices(
     job = job_repo.start(session, "sync_prices")
 
     for sym in symbols:
+        if is_manual_price_symbol(sym):
+            result.manual_priced.append(sym)
+            result.warnings.append(
+                f"{sym} is manual-price only. Record trades with --price; "
+                "automatic sync is skipped."
+            )
+            continue
+
         instrument = inst_repo.get_by_symbol(session, sym)
         if instrument is None:
             result.failed.append(sym)
@@ -141,7 +151,7 @@ def sync_prices(
     status = "success" if not result.failed else ("partial" if result.fetched else "failed")
     msg = (
         f"Fetched {result.fetched} instruments, {result.updated_bars} bars. "
-        f"Failed: {result.failed}"
+        f"Manual-only: {result.manual_priced}. Failed: {result.failed}"
     )
     job_repo.finish(session, job, status=status, message=msg)
 

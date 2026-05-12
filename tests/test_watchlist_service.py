@@ -2,8 +2,8 @@ from decimal import Decimal
 
 from vmarket.services.watchlist_service import (
     add_to_watchlist,
-    remove_from_watchlist,
     list_watchlist,
+    remove_from_watchlist,
     set_targets,
 )
 

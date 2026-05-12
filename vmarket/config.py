@@ -5,9 +5,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DEFAULT_USER_DATA_DIR = Path("./user_data")
+DEFAULT_DB_PATH = DEFAULT_USER_DATA_DIR / "vmarket.sqlite"
+
 
 def get_db_path() -> Path:
-    raw = os.environ.get("VMARKET_DB_PATH", "./data/vmarket.sqlite")
+    raw = os.environ.get("VMARKET_DB_PATH", str(DEFAULT_DB_PATH))
+    return Path(raw).expanduser()
+
+
+def get_user_data_dir() -> Path:
+    raw = os.environ.get("VMARKET_USER_DATA_DIR", str(DEFAULT_USER_DATA_DIR))
     return Path(raw).expanduser()
 
 

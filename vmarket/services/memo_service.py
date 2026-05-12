@@ -4,12 +4,13 @@ from decimal import Decimal
 from sqlalchemy.orm import Session
 
 from vmarket.repositories import cash as cash_repo
-from vmarket.repositories import job_runs as job_repo
 from vmarket.repositories import portfolios as port_repo
 from vmarket.repositories import prices as price_repo
 from vmarket.repositories import trades as trade_repo
 from vmarket.repositories import watchlist as wl_repo
-from vmarket.services.valuation_service import STALE_DAYS, compute_positions
+from vmarket.services.data_quality import build_data_quality_report
+from vmarket.services.freshness import is_manual_price_symbol
+from vmarket.services.valuation_service import compute_positions
 
 
 def _fmt(val: Decimal | None, suffix: str = "") -> str:
@@ -37,8 +38,6 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
 
     today_trades = trade_repo.list_trades_for_date(session, portfolio.id, memo_date)
     wl_items = wl_repo.list_all(session)
-    last_sync = job_repo.get_latest(session, "sync_prices")
-
     lines: list[str] = []
     lines.append(f"# Daily Virtual Market Memo — {memo_date}")
     lines.append("")
@@ -61,10 +60,10 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
     if positions:
         lines.append(
             "| Symbol | Name | Qty | Avg Cost | Latest Price | "
-            "Market Value | P/L | P/L % | Currency |"
+            "Market Value | P/L | P/L % | Currency | Provenance | Confidence |"
         )
         lines.append(
-            "|--------|------|-----|----------|--------------|--------------|-----|-------|----------|"
+            "|--------|------|-----|----------|--------------|--------------|-----|-------|----------|------------|------------|"
         )
         for p in positions:
             pnl_str = _fmt(p.unrealised_pnl)
@@ -75,7 +74,7 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
                 f"| {p.symbol} | {p.name or ''} | {p.quantity:.4f} | "
                 f"{_fmt(p.avg_cost)} | {_fmt(p.latest_price)}{stale_flag} | "
                 f"{_fmt(p.market_value)}{fx_flag} | {pnl_str} | {pnl_pct} | "
-                f"{p.cost_currency} |"
+                f"{p.cost_currency} | {p.provenance_kind} | {p.provenance_confidence:.2f} |"
             )
         if any(p.fx_missing for p in positions):
             lines.append("")
@@ -116,7 +115,13 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
             bar = price_repo.get_latest(session, item.instrument_id)
             price = price_repo.best_price(bar) if bar else None
             notes: list[str] = []
-            if price is not None:
+            if (
+                item.instrument.symbol
+                and price is None
+                and is_manual_price_symbol(item.instrument.symbol)
+            ):
+                notes.append("Manual-price only")
+            elif price is not None:
                 if item.target_buy_price and price <= item.target_buy_price:
                     notes.append(f"Near buy target ({_fmt(item.target_buy_price)})")
                 if item.target_sell_price and price >= item.target_sell_price:
@@ -145,24 +150,15 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
     # Data Quality
     lines.append("## Data Quality")
     lines.append("")
-    if last_sync:
-        lines.append(f"- Last successful price sync: {last_sync.finished_at}")
+    report = build_data_quality_report(session)
+    warning_issues = [issue for issue in report.issues if issue.severity == "warning"]
+    if warning_issues:
+        for issue in report.issues:
+            bullet = f"- {issue.label}: {issue.message}"
+            if issue.symbols:
+                bullet += f" ({', '.join(issue.symbols)})"
+            lines.append(bullet)
     else:
-        lines.append("- Last successful price sync: never")
-
-    stale_symbols = [p.symbol for p in positions if p.stale]
-    if stale_symbols:
-        lines.append(f"- Stale prices (>{STALE_DAYS} days): {', '.join(stale_symbols)}")
-
-    no_price_symbols = [p.symbol for p in positions if p.latest_price is None]
-    if no_price_symbols:
-        lines.append(f"- Missing prices: {', '.join(no_price_symbols)}")
-
-    fx_missing_symbols = [p.symbol for p in positions if p.fx_missing]
-    if fx_missing_symbols:
-        lines.append(f"- Missing FX rates: {', '.join(fx_missing_symbols)}")
-
-    if not stale_symbols and not no_price_symbols and not fx_missing_symbols:
         lines.append("- No data quality issues detected.")
     lines.append("")
 

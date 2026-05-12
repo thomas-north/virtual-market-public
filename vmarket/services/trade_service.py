@@ -32,6 +32,9 @@ def buy(
     currency: str | None = None,
     on_date: date | None = None,
     notes: str | None = None,
+    provenance_kind: str | None = None,
+    provenance_confidence: Decimal | None = None,
+    provenance_note: str | None = None,
 ) -> Trade:
     portfolio = port_repo.get_or_create_default(session)
     instrument = inst_repo.get_by_symbol(session, symbol)
@@ -74,6 +77,9 @@ def buy(
         currency=currency,
         trade_date=trade_date,
         price_source=price_source,
+        provenance_kind=provenance_kind,
+        provenance_confidence=provenance_confidence,
+        provenance_note=provenance_note,
         notes=notes,
     )
     trade_repo.add_trade(session, trade)
@@ -99,6 +105,9 @@ def sell(
     currency: str | None = None,
     on_date: date | None = None,
     notes: str | None = None,
+    provenance_kind: str | None = None,
+    provenance_confidence: Decimal | None = None,
+    provenance_note: str | None = None,
 ) -> Trade:
     portfolio = port_repo.get_or_create_default(session)
     instrument = inst_repo.get_by_symbol(session, symbol)
@@ -139,6 +148,9 @@ def sell(
         currency=currency,
         trade_date=trade_date,
         price_source=price_source,
+        provenance_kind=provenance_kind,
+        provenance_confidence=provenance_confidence,
+        provenance_note=provenance_note,
         notes=notes,
     )
     trade_repo.add_trade(session, trade)

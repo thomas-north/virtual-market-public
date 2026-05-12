@@ -5,23 +5,15 @@ from decimal import Decimal
 from pathlib import Path
 
 import plotext as plt
+from rich import box
 from rich.console import Console
+from rich.table import Table
 from sqlalchemy.orm import Session
 
 from vmarket.services.chart_service import portfolio_value_series
 from vmarket.services.valuation_service import compute_positions
 
 console = Console()
-
-
-# ── helpers ──────────────────────────────────────────────────────────────────
-
-def _gbp(val: Decimal) -> str:
-    return f"£{val:,.0f}"
-
-
-def _pct(val: Decimal | None) -> float:
-    return float(val) if val is not None else 0.0
 
 
 # ── portfolio value over time ─────────────────────────────────────────────────
@@ -112,7 +104,10 @@ def chart_allocation(session: Session, html: Path | None = None) -> None:
     positions = [p for p in positions if p.value_in_base is not None and p.value_in_base > 0]
 
     if not positions:
-        console.print("[yellow]No positions with current prices to chart.[/yellow]")
+        _print_chart_gap(
+            session,
+            "No positions with current mark-to-market prices are available for allocation.",
+        )
         return
 
     total = sum(p.value_in_base for p in positions if p.value_in_base)
@@ -157,7 +152,10 @@ def chart_pnl(session: Session, html: Path | None = None) -> None:
     positions = [p for p in positions if p.unrealised_pnl_pct is not None]
 
     if not positions:
-        console.print("[yellow]No P/L data available. Run vmarket sync prices first.[/yellow]")
+        _print_chart_gap(
+            session,
+            "No unrealised P/L data is available yet. Sync prices or add automatic price coverage.",
+        )
         return
 
     positions_sorted = sorted(positions, key=lambda p: p.unrealised_pnl_pct or Decimal("0"))
@@ -196,3 +194,16 @@ def _export_pnl_html(positions, path: Path) -> None:
     )
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.write_html(str(path))
+
+
+def _print_chart_gap(session: Session, message: str) -> None:
+    console.print(f"[yellow]{message}[/yellow]")
+    positions = compute_positions(session)
+    missing = [p for p in positions if p.latest_price is None]
+    if not missing:
+        return
+
+    table = Table("Symbol", "Status", "Why", box=box.SIMPLE)
+    for position in missing:
+        table.add_row(position.symbol, position.price_status, position.price_status_note)
+    console.print(table)

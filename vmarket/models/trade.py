@@ -20,6 +20,9 @@ class Trade(Base):
     fees: Mapped[Decimal] = mapped_column(Numeric(18, 6), nullable=False, default=Decimal("0"))
     trade_date: Mapped[date] = mapped_column(Date, nullable=False)
     price_source: Mapped[str] = mapped_column(String(32), nullable=False, default="latest_close")
+    provenance_kind: Mapped[str | None] = mapped_column(String(32))
+    provenance_confidence: Mapped[Decimal | None] = mapped_column(Numeric(5, 4))
+    provenance_note: Mapped[str | None] = mapped_column(String(512))
     notes: Mapped[str | None] = mapped_column(String(512))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=func.now())
 

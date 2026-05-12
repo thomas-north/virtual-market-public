@@ -3,6 +3,7 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
+from vmarket.reports.io import write_report_file
 from vmarket.services.memo_service import generate_daily_memo
 
 
@@ -13,6 +14,5 @@ def write_or_print(
 ) -> str:
     content = generate_daily_memo(session, memo_date=memo_date)
     if output:
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(content, encoding="utf-8")
+        write_report_file(output, content)
     return content
