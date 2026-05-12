@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from vmarket.models.cash_ledger import CashLedgerEntry

@@ -3,12 +3,11 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-from vmarket.models.trade import Trade
 from vmarket.models.price import PriceBar
-from vmarket.repositories import cash as cash_repo
+from vmarket.models.trade import Trade
 from vmarket.repositories import portfolios as port_repo
 from vmarket.repositories import prices as price_repo
 
@@ -62,6 +61,7 @@ def portfolio_value_series(session: Session, days: int = 30) -> list[ValuePoint]
 
         # Cash as-of this date
         from sqlalchemy import func
+
         from vmarket.models.cash_ledger import CashLedgerEntry
         cash_result = session.scalar(
             select(func.sum(CashLedgerEntry.amount)).where(

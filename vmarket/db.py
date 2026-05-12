@@ -1,9 +1,9 @@
-from pathlib import Path
+from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Generator
+from pathlib import Path
 
-from sqlalchemy import create_engine, Engine
-from sqlalchemy.orm import Session, DeclarativeBase
+from sqlalchemy import Engine, create_engine
+from sqlalchemy.orm import DeclarativeBase, Session
 
 from vmarket.config import get_db_path
 

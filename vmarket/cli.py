@@ -3,15 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from typing import Optional
 
 import typer
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
 
-from vmarket.db import init_db, get_session
 from vmarket.config import get_base_currency
+from vmarket.db import get_session, init_db
 from vmarket.errors import VMarketError
 
 app = typer.Typer(help="Virtual Market — fake-money investing simulator.")
@@ -42,20 +41,20 @@ def _abort(msg: str) -> None:
 
 @app.command()
 def init(
-    db_path: Optional[Path] = typer.Option(None, "--db-path", help="Path to SQLite database."),
+    db_path: Path | None = typer.Option(None, "--db-path", help="Path to SQLite database."),
 ) -> None:
     """Initialise the database and default portfolio."""
-    from vmarket.repositories import portfolios as port_repo
     from vmarket.config import get_base_currency
+    from vmarket.repositories import portfolios as port_repo
 
-    engine = init_db(db_path)
+    init_db(db_path)
     with get_session(db_path) as session:
         port_repo.get_or_create_default(session, base_currency=get_base_currency())
         session.commit()
 
     db_file = db_path or Path("./data/vmarket.sqlite")
     console.print(f"[green]✓[/green] Database initialised at [bold]{db_file}[/bold]")
-    console.print(f"[green]✓[/green] Default portfolio created.")
+    console.print("[green]✓[/green] Default portfolio created.")
     console.print("\nRun [bold]vmarket --help[/bold] to get started.")
 
 
@@ -71,7 +70,7 @@ def cash_deposit(
 
     with get_session() as session:
         try:
-            entry = deposit(session, Decimal(str(amount)), currency)
+            deposit(session, Decimal(str(amount)), currency)
             session.commit()
         except VMarketError as exc:
             _abort(str(exc))
@@ -121,9 +120,9 @@ def cash_balance() -> None:
 @watch_app.command("add")
 def watch_add(
     symbol: str = typer.Argument(...),
-    name: Optional[str] = typer.Option(None, "--name"),
-    currency: Optional[str] = typer.Option(None, "--currency"),
-    asset_type: Optional[str] = typer.Option(None, "--asset-type"),
+    name: str | None = typer.Option(None, "--name"),
+    currency: str | None = typer.Option(None, "--currency"),
+    asset_type: str | None = typer.Option(None, "--asset-type"),
 ) -> None:
     """Add an instrument to the watchlist."""
     from vmarket.services.watchlist_service import add_to_watchlist
@@ -156,8 +155,8 @@ def watch_remove(symbol: str = typer.Argument(...)) -> None:
 @watch_app.command("target")
 def watch_target(
     symbol: str = typer.Argument(...),
-    buy_below: Optional[float] = typer.Option(None, "--buy-below"),
-    sell_above: Optional[float] = typer.Option(None, "--sell-above"),
+    buy_below: float | None = typer.Option(None, "--buy-below"),
+    sell_above: float | None = typer.Option(None, "--sell-above"),
 ) -> None:
     """Set target prices for a watchlist instrument."""
     from vmarket.services.watchlist_service import set_targets
@@ -180,8 +179,8 @@ def watch_target(
 @app.command("watchlist")
 def show_watchlist() -> None:
     """Show the watchlist."""
-    from vmarket.services.watchlist_service import list_watchlist
     from vmarket.repositories import prices as price_repo
+    from vmarket.services.watchlist_service import list_watchlist
 
     with get_session() as session:
         items = list_watchlist(session)
@@ -203,7 +202,16 @@ def show_watchlist() -> None:
         console.print("Watchlist is empty.")
         return
 
-    table = Table("Symbol", "Name", "CCY", "Type", "Latest", "Buy Target", "Sell Target", box=box.SIMPLE)
+    table = Table(
+        "Symbol",
+        "Name",
+        "CCY",
+        "Type",
+        "Latest",
+        "Buy Target",
+        "Sell Target",
+        box=box.SIMPLE,
+    )
     for row in rows:
         table.add_row(*row)
     console.print(table)
@@ -213,7 +221,7 @@ def show_watchlist() -> None:
 
 @sync_app.command("prices")
 def sync_prices(
-    symbol: Optional[str] = typer.Option(None, "--symbol"),
+    symbol: str | None = typer.Option(None, "--symbol"),
     days: int = typer.Option(7, "--days"),
 ) -> None:
     """Sync daily prices from market data providers."""
@@ -252,6 +260,7 @@ def show_prices(
 ) -> None:
     """Show recent prices for an instrument."""
     from datetime import timedelta
+
     from vmarket.repositories import instruments as inst_repo
     from vmarket.repositories import prices as price_repo
 
@@ -275,7 +284,17 @@ def show_prices(
         console.print(f"No prices found for {symbol} in the last {days} days.")
         return
 
-    table = Table("Date", "Open", "High", "Low", "Close", "Adj Close", "Volume", "Source", box=box.SIMPLE)
+    table = Table(
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume",
+        "Source",
+        box=box.SIMPLE,
+    )
     for row in rows:
         table.add_row(*row)
     console.print(table)
@@ -287,8 +306,8 @@ def show_prices(
 def buy(
     symbol: str = typer.Argument(...),
     quantity: float = typer.Option(..., "--quantity", "-q"),
-    price: Optional[float] = typer.Option(None, "--price"),
-    currency: Optional[str] = typer.Option(None, "--currency"),
+    price: float | None = typer.Option(None, "--price"),
+    currency: str | None = typer.Option(None, "--currency"),
 ) -> None:
     """Buy an instrument using fake money."""
     from vmarket.services.trade_service import buy as _buy
@@ -316,8 +335,8 @@ def buy(
 def sell(
     symbol: str = typer.Argument(...),
     quantity: float = typer.Option(..., "--quantity", "-q"),
-    price: Optional[float] = typer.Option(None, "--price"),
-    currency: Optional[str] = typer.Option(None, "--currency"),
+    price: float | None = typer.Option(None, "--price"),
+    currency: str | None = typer.Option(None, "--currency"),
 ) -> None:
     """Sell an instrument."""
     from vmarket.services.trade_service import sell as _sell
@@ -369,7 +388,17 @@ def trades() -> None:
         console.print("No trades found.")
         return
 
-    table = Table("Date", "Side", "Symbol", "Qty", "Price", "CCY", "Source", "Notes", box=box.SIMPLE)
+    table = Table(
+        "Date",
+        "Side",
+        "Symbol",
+        "Qty",
+        "Price",
+        "CCY",
+        "Source",
+        "Notes",
+        box=box.SIMPLE,
+    )
     for row in rows:
         table.add_row(*row)
     console.print(table)
@@ -379,7 +408,7 @@ def trades() -> None:
 
 @app.command()
 def portfolio(
-    base: Optional[str] = typer.Option(None, "--base"),
+    base: str | None = typer.Option(None, "--base"),
 ) -> None:
     """Show portfolio holdings and valuations."""
     from vmarket.services.valuation_service import compute_positions
@@ -424,7 +453,7 @@ def portfolio(
 
 @memo_app.command("daily")
 def memo_daily(
-    output: Optional[Path] = typer.Option(None, "--output", "-o"),
+    output: Path | None = typer.Option(None, "--output", "-o"),
 ) -> None:
     """Generate daily financial memo."""
     from vmarket.reports.daily_memo import write_or_print
@@ -444,7 +473,7 @@ def memo_daily(
 @chart_app.command("portfolio")
 def chart_portfolio(
     days: int = typer.Option(30, "--days", "-d", help="7, 30, or 90 days"),
-    html: Optional[Path] = typer.Option(None, "--html", help="Also export interactive HTML"),
+    html: Path | None = typer.Option(None, "--html", help="Also export interactive HTML"),
 ) -> None:
     """Line chart: total portfolio value over time."""
     from vmarket.reports.charts import chart_portfolio_value
@@ -456,7 +485,7 @@ def chart_portfolio(
 
 @chart_app.command("allocation")
 def chart_allocation(
-    html: Optional[Path] = typer.Option(None, "--html", help="Also export interactive HTML donut"),
+    html: Path | None = typer.Option(None, "--html", help="Also export interactive HTML donut"),
 ) -> None:
     """Bar chart: current allocation by holding (% of invested)."""
     from vmarket.reports.charts import chart_allocation as _chart
@@ -468,7 +497,7 @@ def chart_allocation(
 
 @chart_app.command("pnl")
 def chart_pnl(
-    html: Optional[Path] = typer.Option(None, "--html", help="Also export interactive HTML"),
+    html: Path | None = typer.Option(None, "--html", help="Also export interactive HTML"),
 ) -> None:
     """Bar chart: unrealised P/L % per holding."""
     from vmarket.reports.charts import chart_pnl as _chart
@@ -513,7 +542,7 @@ def research_brief(
 def research_collect_sec(
     symbol: str = typer.Argument(..., help="Symbol to collect, e.g. META.US"),
     cik: str = typer.Option(..., "--cik", help="SEC CIK for the company."),
-    company_name: Optional[str] = typer.Option(None, "--company-name"),
+    company_name: str | None = typer.Option(None, "--company-name"),
     days: int = typer.Option(30, "--days", help="Lookback window."),
     root: Path = typer.Option(Path("research"), "--root", help="Research workspace root."),
 ) -> None:
