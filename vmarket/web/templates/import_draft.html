@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Import draft</div>
+    {% if draft %}
+    <h2>Review draft #{{ draft.id }} before mutating the simulator</h2>
+    <p>{{ draft.kind }} import from {{ draft.source_kind }} · {{ draft.status }}</p>
+    {% else %}
+    <h2>Import draft not found</h2>
+    {% endif %}
+  </div>
+</section>
+
+{% if draft %}
+<section class="panel">
+  <h3>Draft details</h3>
+  <p class="meta">Rows: {{ draft.row_count }} · warnings: {{ draft.warning_count }}</p>
+  {% if draft.stored_path %}
+  <p class="meta">Stored file: {{ draft.stored_path }}</p>
+  {% endif %}
+  {% if draft.notes %}
+  <p>{{ draft.notes }}</p>
+  {% endif %}
+  {% if draft.kind == "screenshot" %}
+  <p>This screenshot draft cannot be confirmed directly. Give the onboarding agent packet to an external agent so it can extract candidate rows into a portfolio or watchlist draft.</p>
+  <p><a href="/agent/prompt/onboarding-import.md">Open onboarding agent packet</a></p>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h3>Rows</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Symbol</th><th>Name</th><th>Quantity</th><th>Average cost</th><th>Cost basis</th><th>Current value</th><th>Gain</th><th>Currency</th><th>Type</th><th>Warnings</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in draft.rows %}
+      <tr>
+        <td>{{ row.symbol }}</td>
+        <td>{{ row.name or "" }}</td>
+        <td>{{ row.quantity or "" }}</td>
+        <td>{{ row.average_cost or "" }}</td>
+        <td>{{ row.cost_basis or "" }}</td>
+        <td>{{ row.current_value or "" }}</td>
+        <td>{{ row.gain_amount or row.gain_percent or "" }}</td>
+        <td>{{ row.currency or "" }}</td>
+        <td>{{ row.asset_type or "" }}</td>
+        <td>{{ row.warnings|join("; ") }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="10">No extracted rows yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if draft.status == "pending" %}
+  <form method="post" action="/imports/{{ draft.id }}/confirm" class="inline-form">
+    <button type="submit" {% if draft.warning_count or draft.kind == "screenshot" %}disabled{% endif %}>Confirm import</button>
+  </form>
+  <form method="post" action="/imports/{{ draft.id }}/discard" class="inline-form">
+    <button type="submit">Discard draft</button>
+  </form>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

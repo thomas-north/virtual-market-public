@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import date, timedelta
 from decimal import Decimal
 
+from vmarket.consult import save_profile
+from vmarket.consult.models import ConsultantProfile
 from vmarket.dto.price_bar import PriceBarDTO
 from vmarket.repositories import fx as fx_repo
 from vmarket.repositories import instruments as inst_repo
@@ -13,7 +15,7 @@ from vmarket.services.trade_service import buy
 from vmarket.services.watchlist_service import add_to_watchlist
 
 
-def test_data_quality_report_flags_stale_fx(session):
+def test_data_quality_report_flags_stale_fx_and_profile_gap(session):
     deposit(session, Decimal("1000"), "GBP")
     add_to_watchlist(session, "AAPL.US", currency="GBP", asset_type="stock")
     session.commit()
@@ -54,7 +56,8 @@ def test_data_quality_report_flags_stale_fx(session):
     labels = {issue.label for issue in report.issues}
 
     assert "Stale FX" in labels
-    assert report.warning_count >= 1
+    assert "Consultant profile incomplete" in labels
+    assert report.warning_count >= 2
 
 
 def test_data_quality_report_flags_approximate_holdings_and_pence_review(session):
@@ -94,6 +97,10 @@ def test_data_quality_report_flags_approximate_holdings_and_pence_review(session
             )
         ],
     )
+    save_profile(
+        session,
+        ConsultantProfile(risk_score=5, country_jurisdiction="GB", base_currency="GBP"),
+    )
     session.commit()
 
     report = build_data_quality_report(session)
@@ -108,6 +115,10 @@ def test_data_quality_report_flags_approximate_holdings_and_pence_review(session
 def test_data_quality_report_flags_symbols_needing_review(session):
     deposit(session, Decimal("1000"), "GBP")
     add_to_watchlist(session, "CYBR", currency="GBP", asset_type="etf")
+    save_profile(
+        session,
+        ConsultantProfile(risk_score=4, country_jurisdiction="GB", base_currency="GBP"),
+    )
     session.commit()
 
     report = build_data_quality_report(session)

@@ -8,9 +8,11 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy.orm import Session
 
+from vmarket.onboarding.service import get_onboarding_state
 from vmarket.repositories import instruments as inst_repo
 from vmarket.repositories import job_runs as job_repo
 from vmarket.repositories import portfolios as port_repo
+from vmarket.repositories import trades as trade_repo
 from vmarket.services.freshness import is_manual_price_symbol
 from vmarket.services.valuation_service import compute_positions
 
@@ -25,9 +27,11 @@ DataQualityCategory = Literal[
     "approximate_holdings",
     "symbol_format_review",
     "pence_quote_review",
+    "consultant_profile",
 ]
 
 _SYMBOL_FORMAT = re.compile(r"^[A-Z0-9.-]+\.[A-Z]{1,4}$")
+_APPROXIMATE_IMPORT_NOTE = "Approximate value-snapshot import"
 
 
 class DataQualityIssue(BaseModel):
@@ -140,7 +144,7 @@ def build_data_quality_report(session: Session) -> DataQualityReport:
             )
         )
 
-    approximate_symbols = _approximate_holding_symbols(positions)
+    approximate_symbols = _approximate_holding_symbols(session, positions)
     if approximate_symbols:
         issues.append(
             DataQualityIssue(
@@ -148,8 +152,8 @@ def build_data_quality_report(session: Session) -> DataQualityReport:
                 severity="warning",
                 label="Approximate imported holdings",
                 message=(
-                    "Some positions are being tracked from approximate broker snapshots "
-                    "rather than exact unit-level imports."
+                    "Unit counts were unavailable during import; these positions are being "
+                    "tracked from approximate broker snapshots."
                 ),
                 symbols=approximate_symbols,
             )
@@ -185,6 +189,20 @@ def build_data_quality_report(session: Session) -> DataQualityReport:
             )
         )
 
+    onboarding_state = get_onboarding_state(session)
+    if not onboarding_state.profile_ready:
+        issues.append(
+            DataQualityIssue(
+                category="consultant_profile",
+                severity="warning",
+                label="Consultant profile incomplete",
+                message=(
+                    "Risk score or saved consultation preferences are still missing. "
+                    "Complete onboarding or run `vmarket consult profile set`."
+                ),
+            )
+        )
+
     warning_count = sum(1 for issue in issues if issue.severity == "warning")
     neutral_count = sum(1 for issue in issues if issue.severity == "neutral")
     return DataQualityReport(
@@ -195,12 +213,22 @@ def build_data_quality_report(session: Session) -> DataQualityReport:
     )
 
 
-def _approximate_holding_symbols(positions) -> list[str]:
-    return sorted(
-        position.symbol
-        for position in positions
-        if position.provenance_kind != "exact" or position.provenance_confidence < 1.0
-    )
+def _approximate_holding_symbols(session: Session, positions) -> list[str]:
+    open_symbols = {position.symbol for position in positions if position.quantity}
+    if not open_symbols:
+        return []
+
+    portfolio = port_repo.get_or_create_default(session)
+    trades = trade_repo.list_trades(session, portfolio.id)
+    approximate_symbols = {
+        trade.instrument.symbol
+        for trade in trades
+        if trade.instrument is not None
+        and trade.instrument.symbol in open_symbols
+        and trade.notes
+        and _APPROXIMATE_IMPORT_NOTE in trade.notes
+    }
+    return sorted(approximate_symbols)
 
 
 def _symbol_format_review_symbols(session: Session) -> list[str]:

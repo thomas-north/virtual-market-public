@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Decisions</div>
+    <h2>Staged actions and decision journal</h2>
+    <p>Stage actions first, confirm explicitly, and keep a permanent local record.</p>
+  </div>
+  {% if pending_count > 0 %}
+  <div class="pill">{{ pending_count }} pending</div>
+  {% endif %}
+</section>
+
+<div class="tab-bar">
+  <a href="#actions" class="tab-link">
+    Actions
+    {% if pending_count > 0 %}<span class="badge">{{ pending_count }}</span>{% endif %}
+  </a>
+  <a href="#journal" class="tab-link">Journal</a>
+  <a href="#stage" class="tab-link">Stage new</a>
+</div>
+
+<!-- Actions tab -->
+<div id="actions" class="tab-panel">
+  <section class="panel">
+    <h3>Pending and historical actions</h3>
+    <table>
+      <thead>
+        <tr><th>Kind</th><th>Source</th><th>Status</th><th>Workflow</th><th>Payload</th><th>Confirm/discard</th></tr>
+      </thead>
+      <tbody>
+        {% for action in actions %}
+        <tr>
+          <td>{{ action.kind }}</td>
+          <td>{{ action.source }}</td>
+          <td>{{ action.status }}</td>
+          <td>
+            {% if action.payload.workflow_session_id and action.payload.workflow == "thematic-analysis" %}
+            <a href="/themes?session_id={{ action.payload.workflow_session_id }}">theme #{{ action.payload.workflow_session_id }}</a>
+            {% elif action.payload.workflow_session_id and action.payload.workflow == "portfolio-consultation" %}
+            <a href="/consult?session_id={{ action.payload.workflow_session_id }}">consult #{{ action.payload.workflow_session_id }}</a>
+            {% elif action.payload.workflow_session_id and action.payload.workflow == "research-follow-up" %}
+            <a href="/research?session_id={{ action.payload.workflow_session_id }}">research #{{ action.payload.workflow_session_id }}</a>
+            {% else %}
+            <span class="meta">standalone</span>
+            {% endif %}
+          </td>
+          <td>
+            <pre>{{ action.payload }}</pre>
+            {% if action.kind in ('buy', 'sell') and action.status == 'pending' and action.id in previews %}
+            {% set p = previews[action.id] %}
+            <details class="advanced" style="margin-top:8px">
+              <summary>Preview impact</summary>
+              {% if p.invalid %}
+              <p class="meta negative" style="margin-top:6px">{{ p.invalid_reason }}</p>
+              {% else %}
+              <table style="font-size:0.85rem;margin-top:8px;border:none">
+                <tr><td class="meta">Price</td><td>{{ "%.4g"|format(p.price) }} {{ p.currency }}{% if p.price_is_estimated %} <span class="meta">(estimated)</span>{% endif %}</td></tr>
+                <tr><td class="meta">Estimated cost</td><td>{{ "%.2f"|format(p.estimated_cost) }} {{ p.currency }}</td></tr>
+                <tr><td class="meta">Cash balance</td><td>{{ "%.2f"|format(p.cash_balance) }} {{ p.currency }}</td></tr>
+                <tr><td class="meta">Cash after</td><td class="{{ 'negative' if not p.cash_sufficient else '' }}">{{ "%.2f"|format(p.cash_after) }} {{ p.currency }}</td></tr>
+                <tr><td class="meta">Current qty</td><td>{{ "%.4g"|format(p.current_quantity) }}</td></tr>
+                <tr><td class="meta">New qty</td><td class="{{ 'negative' if p.oversell else '' }}">{{ "%.4g"|format(p.new_quantity) }}</td></tr>
+                {% if p.new_weight_pct is not none %}
+                <tr><td class="meta">New weight</td><td>{{ "%.1f"|format(p.new_weight_pct) }}%</td></tr>
+                {% endif %}
+              </table>
+              {% if p.oversell %}<p class="meta negative" style="margin-top:4px">Sell quantity exceeds current holding.</p>{% endif %}
+              {% if not p.cash_sufficient and p.action_kind == 'buy' %}<p class="meta negative" style="margin-top:4px">Insufficient cash for this trade.</p>{% endif %}
+              {% endif %}
+            </details>
+            {% endif %}
+          </td>
+          <td>
+            {% if action.status == "pending" %}
+            <form method="post" action="/actions/{{ action.id }}/confirm" class="inline-form">
+              <button type="submit">Confirm</button>
+            </form>
+            <form method="post" action="/actions/{{ action.id }}/discard" class="inline-form inline-secondary">
+              <button type="submit">Discard</button>
+            </form>
+            {% else %}
+            <span class="meta">Done</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">No staged actions yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- Journal tab -->
+<div id="journal" class="tab-panel">
+  <section class="panel">
+    <h3>Decision notes</h3>
+    <ul class="list">
+      {% for entry in journal_entries %}
+      <li>
+        <strong>{{ entry.title }}</strong>
+        <div class="meta">{{ entry.workflow }} · {{ entry.updated_at.strftime("%Y-%m-%d %H:%M") }}</div>
+        <p>{{ entry.summary }}</p>
+        {% if entry.rationale %}
+        <p class="meta">Rationale: {{ entry.rationale }}</p>
+        {% endif %}
+        {% if entry.open_questions %}
+        <p class="meta">Open questions: {{ entry.open_questions|join("; ") }}</p>
+        {% endif %}
+        {% if entry.workflow_session_id %}
+        <p class="meta">Linked to workflow session #{{ entry.workflow_session_id }}</p>
+        {% endif %}
+      </li>
+      {% else %}
+      <li>No decision notes saved yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+<!-- Stage new tab -->
+<div id="stage" class="tab-panel">
+  <section class="grid two">
+    <article class="panel">
+      <h3>Stage a watchlist addition</h3>
+      <form method="post" action="/actions/stage" class="form-grid">
+        <input type="hidden" name="kind" value="watch_add">
+        <input type="hidden" name="source" value="user">
+        <label>Symbol
+          <input type="text" name="symbol" placeholder="CHIP.L">
+        </label>
+        <label>Name
+          <input type="text" name="name" placeholder="VanEck Semiconductor ETF">
+        </label>
+        <label>Currency
+          <input type="text" name="currency" placeholder="GBP">
+        </label>
+        <label>Asset type
+          <input type="text" name="asset_type" value="etf">
+        </label>
+        <label class="wide">Explanation
+          <textarea name="explanation" rows="2" placeholder="Why stage this?"></textarea>
+        </label>
+        <div class="wide"><button type="submit">Stage watch add</button></div>
+      </form>
+    </article>
+    <article class="panel">
+      <h3>Stage a simulated trade</h3>
+      <form method="post" action="/actions/stage" class="form-grid">
+        <input type="hidden" name="kind" value="buy">
+        <input type="hidden" name="source" value="user">
+        <label>Symbol
+          <input type="text" name="symbol" placeholder="AAPL.US">
+        </label>
+        <label>Quantity
+          <input type="text" name="quantity" placeholder="2">
+        </label>
+        <label>Price
+          <input type="text" name="price" placeholder="optional">
+        </label>
+        <label>Currency
+          <input type="text" name="currency" placeholder="USD">
+        </label>
+        <label class="wide">Notes
+          <textarea name="notes" rows="2" placeholder="Optional trade note"></textarea>
+        </label>
+        <label class="wide">Explanation
+          <textarea name="explanation" rows="2" placeholder="Why stage this?"></textarea>
+        </label>
+        <div class="wide"><button type="submit">Stage buy</button></div>
+      </form>
+    </article>
+  </section>
+</div>
+{% endblock %}

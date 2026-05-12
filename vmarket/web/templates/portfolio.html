@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Portfolio</div>
+    <h2>Holdings, valuations, and overview report</h2>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="pill">{{ overview.portfolio_snapshot.summary.freshness_label }}</div>
+    <form method="post" action="/sync/prices" id="sync-form">
+      <button type="submit" id="sync-btn">Sync prices</button>
+    </form>
+  </div>
+</section>
+<script>
+  document.getElementById('sync-form').addEventListener('submit', function () {
+    var btn = document.getElementById('sync-btn');
+    btn.disabled = true;
+    btn.textContent = 'Syncing…';
+  });
+</script>
+
+<div class="tab-bar">
+  <a href="#overview-report" class="tab-link">Overview report</a>
+  <a href="#holdings" class="tab-link">Holdings</a>
+  <a href="#drift" class="tab-link">Allocation drift{% if drift_rows and drift_rows|selectattr('severity', 'equalto', 'significant')|list %} <span class="badge">!</span>{% endif %}</a>
+</div>
+
+<!-- Overview report tab (first = default) -->
+<div id="overview-report" class="tab-panel">
+  <section class="panel report-frame-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 0 10px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">Live overview report</h3>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        {% if benchmark_symbol %}
+        <span class="pill">Benchmark: {{ benchmark_symbol }}</span>
+        <form method="post" action="/portfolio/benchmark/clear" style="display:inline">
+          <button type="submit" class="meta" style="background:none;border:none;cursor:pointer;padding:0;color:var(--danger)">✕ Clear</button>
+        </form>
+        {% else %}
+        <form method="post" action="/portfolio/benchmark" style="display:flex;gap:6px;align-items:center">
+          <input type="text" name="symbol" placeholder="Benchmark symbol" style="width:130px;padding:3px 6px;font-size:0.8rem">
+          <button type="submit" style="padding:3px 10px;font-size:0.8rem">Set benchmark</button>
+        </form>
+        {% endif %}
+        <a href="/overview/standalone?days={{ days }}" target="_blank" class="meta">Open in new tab ↗</a>
+      </div>
+    </div>
+    <iframe
+      class="report-frame"
+      src="/overview/standalone?days={{ days }}"
+      title="Portfolio overview report"
+    ></iframe>
+  </section>
+</div>
+
+<!-- Holdings tab -->
+<div id="holdings" class="tab-panel">
+  <section class="grid cards">
+    {% for card in overview.portfolio_snapshot.summary.cards %}
+    <article class="card">
+      <div class="label">{{ card.label }}</div>
+      <div class="value">{{ card.display }}</div>
+      {% if card.pct_display %}
+      <div class="meta">{{ card.pct_display }}</div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+
+  {% if overview.portfolio_snapshot.data_quality %}
+  <section class="panel notice">
+    <h3>Data quality</h3>
+    <ul class="list">
+      {% for item in overview.portfolio_snapshot.data_quality %}
+      <li>{{ item.label }} · {{ item.message }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section class="panel">
+    <h3>Active holdings</h3>
+    {% if overview.portfolio_snapshot.holdings.active %}
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Qty</th>
+          <th>Latest price</th>
+          <th>Value (base)</th>
+          <th>Unrealised P/L</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in overview.portfolio_snapshot.holdings.active %}
+        <tr>
+          <td><strong>{{ h.symbol }}</strong></td>
+          <td>{{ h.name }}</td>
+          <td>{{ "%.4g"|format(h.quantity) }}</td>
+          <td>{{ "%.2f"|format(h.latest_price) if h.latest_price is not none else "–" }}</td>
+          <td>{{ "%.2f"|format(h.base_value) if h.base_value is not none else "–" }}</td>
+          <td class="{{ 'positive' if h.unrealised_pnl is not none and h.unrealised_pnl >= 0 else 'negative' if h.unrealised_pnl is not none else '' }}">
+            {{ "%.2f"|format(h.unrealised_pnl) if h.unrealised_pnl is not none else "–" }}
+            {% if h.unrealised_pnl_pct is not none %}
+            <span class="meta">({{ "%.1f"|format(h.unrealised_pnl_pct) }}%)</span>
+            {% endif %}
+          </td>
+          <td class="meta">{{ "%.1f"|format(h.weight_pct) ~ "%" if h.weight_pct is not none else "–" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No active holdings yet. <a href="/onboarding">Import your portfolio</a> to get started.</p>
+    {% endif %}
+  </section>
+
+  {% if overview.portfolio_snapshot.holdings.manual %}
+  <section class="panel">
+    <h3>Manual-price holdings</h3>
+    <table>
+      <thead>
+        <tr><th>Symbol</th><th>Name</th><th>Qty</th><th>Value (base)</th></tr>
+      </thead>
+      <tbody>
+        {% for h in overview.portfolio_snapshot.holdings.manual %}
+        <tr>
+          <td><strong>{{ h.symbol }}</strong></td>
+          <td>{{ h.name }}</td>
+          <td>{{ "%.4g"|format(h.quantity) }}</td>
+          <td>{{ "%.2f"|format(h.base_value) if h.base_value is not none else "–" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Allocation drift tab -->
+<div id="drift" class="tab-panel">
+  {% if drift_rows %}
+  <section class="panel">
+    <h3>Allocation vs targets</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Asset type</th>
+          <th>Target %</th>
+          <th>Actual %</th>
+          <th>Drift</th>
+          <th>Status</th>
+          <th>Holdings</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in drift_rows %}
+        <tr>
+          <td><strong>{{ r.label }}</strong></td>
+          <td>{{ "%.1f"|format(r.target_pct) if r.target_pct else "–" }}</td>
+          <td>{{ "%.1f"|format(r.actual_pct) }}</td>
+          <td class="{{ 'negative' if r.severity == 'significant' else 'warning' if r.severity == 'mild' else 'positive' }}">
+            {{ "%+.1f"|format(r.drift_pct) }}pp
+          </td>
+          <td class="{{ 'negative' if r.severity == 'significant' else 'warning' if r.severity == 'mild' else 'positive' }}">
+            {{ r.severity }}
+          </td>
+          <td class="meta">{{ r.symbols | join(", ") if r.symbols else "–" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h3>Set target allocations</h3>
+    <p class="meta">Enter target percentages per asset type. Targets should sum to 100. Leave blank to set no target for a bucket.</p>
+    <form method="post" action="/portfolio/targets" class="form-grid">
+      {% for r in drift_rows %}
+      <label>{{ r.label }} %
+        <input type="number" name="target_{{ r.label }}" min="0" max="100" step="0.1"
+               value="{{ "%.1f"|format(r.target_pct) if r.target_pct else '' }}"
+               placeholder="0">
+      </label>
+      {% endfor %}
+      <div class="wide"><button type="submit">Save targets</button></div>
+    </form>
+  </section>
+  {% else %}
+  <section class="panel">
+    <p>No holdings to analyse yet. <a href="/onboarding">Import your portfolio</a> to get started.</p>
+  </section>
+  {% endif %}
+</div>
+
+{% endblock %}

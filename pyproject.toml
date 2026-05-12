@@ -16,6 +16,10 @@ dependencies = [
     "python-dotenv>=1.0",
     "plotext>=5.2",
     "plotly>=5.0",
+    "fastapi>=0.115",
+    "jinja2>=3.1",
+    "uvicorn>=0.30",
+    "python-multipart>=0.0.9",
 ]
 
 [project.scripts]
@@ -26,6 +30,7 @@ dev = [
     "pytest>=8",
     "pytest-mock>=3",
     "ruff>=0.4",
+    "httpx>=0.28",
 ]
 
 [tool.ruff]

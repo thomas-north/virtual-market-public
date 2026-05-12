@@ -21,7 +21,6 @@ from vmarket.services.chart_service import (
 )
 from vmarket.services.data_quality import build_data_quality_report
 from vmarket.services.freshness import is_manual_price_symbol, price_status_for
-from vmarket.services.portfolio_state_service import get_benchmark_symbol
 from vmarket.services.valuation_service import compute_positions
 
 
@@ -147,13 +146,34 @@ def build_portfolio_snapshot_payload(session: Session, days: int = 30) -> dict[s
     }
 
 
+_BENCHMARK_FILE = Path("user_data/benchmark.txt")
+
+
+def get_benchmark_symbol() -> str | None:
+    """Return the configured benchmark symbol, or None if not set."""
+    try:
+        sym = _BENCHMARK_FILE.read_text(encoding="utf-8").strip()
+        return sym or None
+    except FileNotFoundError:
+        return None
+
+
+def set_benchmark_symbol(symbol: str) -> None:
+    _BENCHMARK_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _BENCHMARK_FILE.write_text(symbol.strip().upper(), encoding="utf-8")
+
+
+def clear_benchmark_symbol() -> None:
+    _BENCHMARK_FILE.unlink(missing_ok=True)
+
+
 def _portfolio_series(session, points, days: int) -> dict[str, object]:
     dates = [p.date.isoformat() for p in points]
     total = [float(p.value) for p in points]
     invested = [float(p.invested) for p in points]
     cash = [float(p.cash) for p in points]
 
-    benchmark_symbol = get_benchmark_symbol(session)
+    benchmark_symbol = get_benchmark_symbol()
     benchmark: list[float | None] | None = None
     if benchmark_symbol and points:
         raw = benchmark_price_series(session, benchmark_symbol, [p.date for p in points])
@@ -734,8 +754,6 @@ def render_overview_html(payload: dict[str, object]) -> str:
     function holdingRow(row) {{
       const weightText =
         row.weight_pct === null ? "N/A" : `${{number(row.weight_pct, 1)}}%`;
-      const provenancePct = number(row.provenance_confidence * 100, 0);
-      const provenanceText = row.provenance_kind + " · " + provenancePct + "%";
       const fxBadge = row.fx_status !== "not_needed"
         ? ` ${{badge(row.fx_status.replace("_", " "), row.fx_status)}}`
         : "";
@@ -750,7 +768,6 @@ def render_overview_html(payload: dict[str, object]) -> str:
           <td class="numeric">${{weightText}}</td>
           <td class="numeric">${{pct(row.unrealised_pnl_pct)}}</td>
           <td>${{badge(row.price_status, row.price_status)}}${{fxBadge}}</td>
-          <td class="subline">${{provenanceText}}</td>
           <td>${{sparklineSvg(row.sparkline)}}</td>
         </tr>
       `;
@@ -772,7 +789,6 @@ def render_overview_html(payload: dict[str, object]) -> str:
               <th>Weight</th>
               <th>Unrealised P/L</th>
               <th>Status</th>
-              <th>Source</th>
               <th>30-day trend</th>
             </tr>
           </thead>
@@ -801,22 +817,18 @@ def render_overview_html(payload: dict[str, object]) -> str:
             </tr>
           </thead>
           <tbody>
-            ${{manual.map((row) => {{
-              const provenancePct = number(row.provenance_confidence * 100, 0);
-              return `
-            <tr>
-              <td class="symbol-cell">
-                <strong>${{row.symbol}}</strong>
-                <div class="subline">${{row.name || ""}}</div>
-              </td>
+            ${{manual.map((row) => `
+              <tr>
+                <td class="symbol-cell">
+                  <strong>${{row.symbol}}</strong>
+                  <div class="subline">${{row.name || ""}}</div>
+                </td>
                 <td class="numeric">${{number(row.quantity, 4)}}</td>
-              <td class="numeric">${{money(row.avg_cost, row.currency)}}</td>
-              <td>${{badge(row.price_status, row.price_status)}}</td>
-              <td class="subline">${{row.provenance_kind}} · ${{provenancePct}}%</td>
-              <td class="subline">${{row.price_status_note}}</td>
-            </tr>
-          `;
-            }}).join("")}}
+                <td class="numeric">${{money(row.avg_cost, row.currency)}}</td>
+                <td>${{badge(row.price_status, row.price_status)}}</td>
+                <td class="subline">${{row.price_status_note}}</td>
+              </tr>
+            `).join("")}}
           </tbody>
         </table>
       ` : "";
@@ -983,9 +995,6 @@ def _holding_row(
         "price_status": position.price_status,
         "price_status_note": position.price_status_note,
         "fx_status": position.fx_status,
-        "provenance_kind": position.provenance_kind,
-        "provenance_confidence": position.provenance_confidence,
-        "provenance_note": position.provenance_note or "",
         "sparkline": sparkline,
         "sort_value": float(position.value_in_base or Decimal("0")),
     }

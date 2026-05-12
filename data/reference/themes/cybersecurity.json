@@ -1,0 +1,152 @@
+{
+  "theme_id": "cybersecurity",
+  "label": "Cybersecurity",
+  "summary": "Security software, identity, and infrastructure exposure analysed through a portfolio-aware lens.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer factsheets before relying on live fund characteristics."
+  },
+  "keywords": ["cybersecurity", "digital security", "security software", "cyber"],
+  "starter_stock_basket": {
+    "basket_id": "cybersecurity-core-basket",
+    "name": "Cybersecurity Equal-Weight Basket",
+    "summary": "Equal-weight pure-play cyber basket for high-conviction thematic implementation.",
+    "holdings": [
+      {"name": "CrowdStrike", "symbol": "CRWD.US", "weight": 20, "tags": ["endpoint", "cloud"]},
+      {"name": "Cloudflare", "symbol": "NET.US", "weight": 20, "tags": ["edge", "network security"]},
+      {"name": "Palo Alto Networks", "symbol": "PANW.US", "weight": 20, "tags": ["platform"]},
+      {"name": "Zscaler", "symbol": "ZS.US", "weight": 20, "tags": ["zero trust"]},
+      {"name": "Okta", "symbol": "OKTA.US", "weight": 20, "tags": ["identity"]}
+    ],
+    "rebalancing_note": "A direct basket is purer but requires manual rebalancing and monitoring."
+  },
+  "candidates": [
+    {
+      "profile_id": "CYSE",
+      "name": "Global X Cybersecurity UCITS ETF",
+      "issuer": "Global X",
+      "summary": "Purity-first cybersecurity basket with a strong tilt toward software-led security franchises.",
+      "theme_tags": ["cybersecurity", "software", "cloud security"],
+      "facts": {
+        "top_holdings": [
+          {"name": "CrowdStrike", "symbol": "CRWD.US", "weight": 7.5, "tags": ["endpoint", "cloud"]},
+          {"name": "Cloudflare", "symbol": "NET.US", "weight": 6.8, "tags": ["edge", "network security"]},
+          {"name": "Palo Alto Networks", "symbol": "PANW.US", "weight": 6.4, "tags": ["platform"]},
+          {"name": "Zscaler", "symbol": "ZS.US", "weight": 5.7, "tags": ["zero trust"]},
+          {"name": "Okta", "symbol": "OKTA.US", "weight": 4.8, "tags": ["identity"]}
+        ],
+        "holdings_count": 32,
+        "ter_pct": 0.50,
+        "aum_usd_millions": 220,
+        "volatility_3y_pct": 27.5,
+        "methodology_summary": "Thematic index tilted toward companies deriving substantial revenue from cybersecurity software and services.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "CYSE.L", "currency": "GBP", "exchange": "LSE", "is_primary": true},
+          {"symbol": "CYSE.DE", "currency": "EUR", "exchange": "Xetra", "is_primary": false}
+        ],
+        "listing_currencies": ["GBP", "EUR"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "small",
+      "purity_score": 92,
+      "concentration_risk": 72,
+      "volatility_risk": 78,
+      "growth_tilt": 92,
+      "infrastructure_tilt": 24,
+      "notes_purity": "strong alignment with modern software-led cyber exposure",
+      "notes_concentration": "higher concentration and growth sensitivity than broader security funds",
+      "preferred_company_aliases": ["CrowdStrike", "Cloudflare", "Palo Alto", "Zscaler", "Okta"],
+      "overlap_aliases": ["CrowdStrike", "Cloudflare", "Palo Alto", "Zscaler", "Okta", "Fortinet", "SentinelOne"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "FCBR",
+      "name": "First Trust Nasdaq Cybersecurity UCITS ETF",
+      "issuer": "First Trust",
+      "summary": "Balanced cyber implementation with more infrastructure, hardware, and platform exposure.",
+      "theme_tags": ["cybersecurity", "infrastructure", "platform"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Cisco", "symbol": "CSCO.US", "weight": 5.8, "tags": ["networking"]},
+          {"name": "Broadcom", "symbol": "AVGO.US", "weight": 5.5, "tags": ["infrastructure"]},
+          {"name": "Palo Alto Networks", "symbol": "PANW.US", "weight": 5.2, "tags": ["platform"]},
+          {"name": "Fortinet", "symbol": "FTNT.US", "weight": 4.9, "tags": ["network security"]},
+          {"name": "Arista Networks", "symbol": "ANET.US", "weight": 4.2, "tags": ["networking"]}
+        ],
+        "holdings_count": 42,
+        "ter_pct": 0.47,
+        "aum_usd_millions": 780,
+        "volatility_3y_pct": 22.0,
+        "methodology_summary": "Index methodology blending software, infrastructure, and security hardware names with broader capacity screens.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "FCBR.L", "currency": "GBP", "exchange": "LSE", "is_primary": true},
+          {"symbol": "FCBR.DE", "currency": "EUR", "exchange": "Xetra", "is_primary": false}
+        ],
+        "listing_currencies": ["GBP", "EUR"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 74,
+      "concentration_risk": 48,
+      "volatility_risk": 58,
+      "growth_tilt": 60,
+      "infrastructure_tilt": 74,
+      "notes_purity": "still cyber-relevant, but less pure than software-heavy peers",
+      "notes_concentration": "broader implementation with lower concentration risk",
+      "preferred_company_aliases": ["Palo Alto", "Fortinet", "Cisco", "Broadcom"],
+      "overlap_aliases": ["Cisco", "Broadcom", "Palo Alto", "Fortinet", "Arista", "CrowdStrike"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "LOCK",
+      "name": "iShares Digital Security UCITS ETF",
+      "issuer": "iShares",
+      "summary": "Broader digital-security basket with more diversified implementation and lower single-theme intensity.",
+      "theme_tags": ["digital security", "broad security", "enterprise IT"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Accenture", "symbol": "ACN.US", "weight": 4.8, "tags": ["services"]},
+          {"name": "Cisco", "symbol": "CSCO.US", "weight": 4.5, "tags": ["networking"]},
+          {"name": "Palo Alto Networks", "symbol": "PANW.US", "weight": 4.4, "tags": ["platform"]},
+          {"name": "Check Point", "symbol": "CHKP.US", "weight": 4.0, "tags": ["software"]},
+          {"name": "Trend Micro", "symbol": "4704.T", "weight": 3.6, "tags": ["software"]}
+        ],
+        "holdings_count": 58,
+        "ter_pct": 0.40,
+        "aum_usd_millions": 1400,
+        "volatility_3y_pct": 18.5,
+        "methodology_summary": "Broader digital security index spanning enterprise software, consulting, networking, and defensive IT.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "LOCK.L", "currency": "GBP", "exchange": "LSE", "is_primary": true},
+          {"symbol": "LOCK.AS", "currency": "USD", "exchange": "Euronext", "is_primary": false}
+        ],
+        "listing_currencies": ["GBP", "USD"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 66,
+      "concentration_risk": 38,
+      "volatility_risk": 52,
+      "growth_tilt": 48,
+      "infrastructure_tilt": 58,
+      "notes_purity": "broader security framing with more diversified exposure",
+      "notes_concentration": "lower concentration and generally more moderate risk profile",
+      "preferred_company_aliases": ["Palo Alto", "Check Point", "Cisco"],
+      "overlap_aliases": ["Cisco", "Accenture", "Palo Alto", "Check Point", "CrowdStrike"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

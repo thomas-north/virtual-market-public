@@ -27,9 +27,7 @@ def upsert_fx_rate(
     session.execute(stmt)
 
 
-def get_rate(
-    session: Session, fx_date: date, base: str, quote: str
-) -> Decimal | None:
+def get_rate(session: Session, fx_date: date, base: str, quote: str) -> Decimal | None:
     row = session.scalar(
         select(FxRate).where(
             FxRate.date == fx_date,

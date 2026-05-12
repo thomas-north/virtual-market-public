@@ -60,10 +60,10 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
     if positions:
         lines.append(
             "| Symbol | Name | Qty | Avg Cost | Latest Price | "
-            "Market Value | P/L | P/L % | Currency | Provenance | Confidence |"
+            "Market Value | P/L | P/L % | Currency |"
         )
         lines.append(
-            "|--------|------|-----|----------|--------------|--------------|-----|-------|----------|------------|------------|"
+            "|--------|------|-----|----------|--------------|--------------|-----|-------|----------|"
         )
         for p in positions:
             pnl_str = _fmt(p.unrealised_pnl)
@@ -74,7 +74,7 @@ def generate_daily_memo(session: Session, memo_date: date | None = None) -> str:
                 f"| {p.symbol} | {p.name or ''} | {p.quantity:.4f} | "
                 f"{_fmt(p.avg_cost)} | {_fmt(p.latest_price)}{stale_flag} | "
                 f"{_fmt(p.market_value)}{fx_flag} | {pnl_str} | {pnl_pct} | "
-                f"{p.cost_currency} | {p.provenance_kind} | {p.provenance_confidence:.2f} |"
+                f"{p.cost_currency} |"
             )
         if any(p.fx_missing for p in positions):
             lines.append("")

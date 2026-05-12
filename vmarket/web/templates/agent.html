@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">External-agent workflow</div>
+    <h2>Prepare context and prompt packets for Codex, Claude Code, or OpenClaw</h2>
+    <p>The cockpit stays local and deterministic. Agent execution happens outside the app.</p>
+  </div>
+  {% if current_session %}
+  <div class="pill">Session #{{ current_session.id }}</div>
+  {% endif %}
+</section>
+
+<section class="grid two">
+  <article class="panel">
+    <h3>Context bundle</h3>
+    <p class="meta">Workflow: {{ bundle.workflow }}</p>
+    {% if current_session %}
+    <p class="meta">Origin: {{ current_session.title }}</p>
+    {% endif %}
+    <ul class="list monospace">
+      {% for command in bundle.recommended_commands %}
+      <li>{{ command }}</li>
+      {% endfor %}
+    </ul>
+    <p><a href="/agent/context.json?workflow={{ bundle.workflow }}{% if current_session %}&session_id={{ current_session.id }}{% endif %}">Download JSON context</a></p>
+  </article>
+  <article class="panel">
+    <h3>Prompt packet</h3>
+    <p>{{ packet.summary }}</p>
+    <p><a href="/agent/prompt/{{ packet.workflow }}.md{% if current_session %}?session_id={{ current_session.id }}{% endif %}">Download Markdown prompt</a></p>
+  </article>
+</section>
+
+<section class="grid two">
+  <article class="panel">
+    <h3>Save handoff rationale</h3>
+    <form method="post" action="/journal/save" class="form-grid">
+      <input type="hidden" name="workflow" value="{{ bundle.workflow }}">
+      <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+      <input type="hidden" name="title" value="{{ packet.title }}">
+      <input type="hidden" name="summary" value="{{ packet.summary }}">
+      <input type="hidden" name="rationale" value="Agent packet prepared from the current cockpit workflow and portfolio snapshot.">
+      <input type="hidden" name="redirect_to" value="/agent{% if current_session %}?session_id={{ current_session.id }}{% endif %}">
+      <div class="wide"><button type="submit">Save handoff note</button></div>
+    </form>
+  </article>
+  <article class="panel">
+    <h3>Related decisions</h3>
+    <ul class="list">
+      {% for entry in journal_entries %}
+      <li>
+        <strong>{{ entry.title }}</strong>
+        <div class="meta">{{ entry.summary }}</div>
+      </li>
+      {% else %}
+      <li>No saved decision notes for this workflow yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="panel">
+  <h3>Prompt preview</h3>
+  <pre>{{ packet.prompt_markdown }}</pre>
+</section>
+{% endblock %}

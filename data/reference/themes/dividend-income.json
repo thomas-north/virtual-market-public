@@ -1,0 +1,149 @@
+{
+  "theme_id": "dividend-income",
+  "label": "Dividend Income",
+  "summary": "Dividend-income implementation with explicit trade-offs between yield focus, diversification, and portfolio overlap.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["dividend income", "income", "yield", "equity income", "dividends"],
+  "starter_stock_basket": {
+    "basket_id": "dividend-income-basket",
+    "name": "Dividend Leaders Equal-Weight Basket",
+    "summary": "Equal-weight basket of diversified dividend compounders and high-quality cash generators.",
+    "holdings": [
+      {"name": "Johnson & Johnson", "symbol": "JNJ.US", "weight": 20, "tags": ["healthcare"]},
+      {"name": "PepsiCo", "symbol": "PEP.US", "weight": 20, "tags": ["consumer"]},
+      {"name": "Shell", "symbol": "SHEL.L", "weight": 20, "tags": ["energy"]},
+      {"name": "Unilever", "symbol": "ULVR.L", "weight": 20, "tags": ["consumer"]},
+      {"name": "Procter & Gamble", "symbol": "PG.US", "weight": 20, "tags": ["consumer"]}
+    ],
+    "rebalancing_note": "Direct dividend baskets are simple conceptually, but still require manual upkeep and sector-bias discipline."
+  },
+  "candidates": [
+    {
+      "profile_id": "FUSD",
+      "name": "Quality Dividend UCITS ETF",
+      "issuer": "Starter Research",
+      "summary": "Quality-tilted dividend implementation that prioritises durability over headline yield.",
+      "theme_tags": ["dividend income", "quality"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Johnson & Johnson", "symbol": "JNJ.US", "weight": 4.8, "tags": ["healthcare"]},
+          {"name": "PepsiCo", "symbol": "PEP.US", "weight": 4.5, "tags": ["consumer"]},
+          {"name": "Unilever", "symbol": "ULVR.L", "weight": 4.1, "tags": ["consumer"]},
+          {"name": "Nestle", "symbol": "NESN.SW", "weight": 3.9, "tags": ["consumer"]},
+          {"name": "Roche", "symbol": "ROG.SW", "weight": 3.8, "tags": ["healthcare"]}
+        ],
+        "holdings_count": 78,
+        "ter_pct": 0.30,
+        "aum_usd_millions": 2200,
+        "volatility_3y_pct": 12.5,
+        "methodology_summary": "Dividend basket tilted toward quality, balance-sheet strength, and persistence rather than maximum yield.",
+        "domicile": "Ireland",
+        "distribution_policy": "distributing",
+        "listings": [
+          {"symbol": "FUSD.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 74,
+      "concentration_risk": 32,
+      "volatility_risk": 40,
+      "growth_tilt": 28,
+      "infrastructure_tilt": 10,
+      "notes_purity": "a strong dividend-income fit without drifting too far into low-quality yield traps",
+      "notes_concentration": "broad and easier to hold at scale than a direct basket",
+      "preferred_company_aliases": ["Johnson & Johnson", "PepsiCo", "Unilever"],
+      "overlap_aliases": ["Johnson & Johnson", "PepsiCo", "Unilever", "Nestle", "Roche"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "VHYL",
+      "name": "Global High Dividend Yield ETF",
+      "issuer": "Starter Research",
+      "summary": "Yield-heavier global dividend implementation with more value and sector sensitivity.",
+      "theme_tags": ["dividend income", "yield"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Shell", "symbol": "SHEL.L", "weight": 4.6, "tags": ["energy"]},
+          {"name": "Exxon Mobil", "symbol": "XOM.US", "weight": 4.2, "tags": ["energy"]},
+          {"name": "British American Tobacco", "symbol": "BATS.L", "weight": 4.0, "tags": ["consumer"]},
+          {"name": "Chevron", "symbol": "CVX.US", "weight": 3.8, "tags": ["energy"]},
+          {"name": "HSBC", "symbol": "HSBA.L", "weight": 3.7, "tags": ["financials"]}
+        ],
+        "holdings_count": 110,
+        "ter_pct": 0.29,
+        "aum_usd_millions": 4100,
+        "volatility_3y_pct": 13.8,
+        "methodology_summary": "Broad higher-yield equity basket with more sector sensitivity than quality-income products.",
+        "domicile": "Ireland",
+        "distribution_policy": "distributing",
+        "listings": [
+          {"symbol": "VHYL.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 68,
+      "concentration_risk": 36,
+      "volatility_risk": 46,
+      "growth_tilt": 18,
+      "infrastructure_tilt": 12,
+      "notes_purity": "a stronger fit if the priority is income yield rather than quality growth",
+      "notes_concentration": "still broad, but more exposed to sectoral yield traps and value cyclicality",
+      "preferred_company_aliases": ["Shell", "HSBC", "Chevron"],
+      "overlap_aliases": ["Shell", "Exxon Mobil", "British American Tobacco", "Chevron", "HSBC"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "TDIV",
+      "name": "Dividend Growers ETF",
+      "issuer": "Starter Research",
+      "summary": "Dividend-growth implementation favouring compounding businesses over headline income.",
+      "theme_tags": ["dividend income", "dividend growth"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Microsoft", "symbol": "MSFT.US", "weight": 4.5, "tags": ["technology"]},
+          {"name": "Johnson & Johnson", "symbol": "JNJ.US", "weight": 4.3, "tags": ["healthcare"]},
+          {"name": "PepsiCo", "symbol": "PEP.US", "weight": 4.1, "tags": ["consumer"]},
+          {"name": "Procter & Gamble", "symbol": "PG.US", "weight": 4.0, "tags": ["consumer"]},
+          {"name": "Visa", "symbol": "V.US", "weight": 3.7, "tags": ["payments"]}
+        ],
+        "holdings_count": 87,
+        "ter_pct": 0.35,
+        "aum_usd_millions": 1800,
+        "volatility_3y_pct": 12.0,
+        "methodology_summary": "Dividend-growth basket emphasising durability and growth of payouts rather than maximum current yield.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "TDIV.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 62,
+      "concentration_risk": 34,
+      "volatility_risk": 38,
+      "growth_tilt": 34,
+      "infrastructure_tilt": 10,
+      "notes_purity": "less income-pure, but often a better fit when quality and compounding matter more than yield",
+      "notes_concentration": "broad and stable, though sometimes less satisfying for income-focused users",
+      "preferred_company_aliases": ["Microsoft", "Johnson & Johnson", "PepsiCo", "Procter & Gamble", "Visa"],
+      "overlap_aliases": ["Microsoft", "Johnson & Johnson", "PepsiCo", "Procter & Gamble", "Visa"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

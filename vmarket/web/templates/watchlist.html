@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Watchlist</div>
+    <h2>Tracked instruments and price targets</h2>
+  </div>
+  {% if targets_hit %}
+  <div class="pill warning">{{ targets_hit|length }} target{{ "s" if targets_hit|length != 1 }} hit</div>
+  {% endif %}
+</section>
+
+<div class="tab-bar">
+  <a href="#watching" class="tab-link">Watching</a>
+  <a href="#targets-hit" class="tab-link">Targets hit{% if targets_hit %} <span class="badge">{{ targets_hit|length }}</span>{% endif %}</a>
+  <a href="#add" class="tab-link">Add instrument</a>
+</div>
+
+<!-- Watching tab (default) -->
+<div id="watching" class="tab-panel">
+  {% if rows %}
+  <section class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Buy target</th>
+          <th>Sell target</th>
+          <th>Distance</th>
+          <th>Flag</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td><strong>{{ r.symbol }}</strong></td>
+          <td>{{ r.name }}</td>
+          <td>
+            {% if r.latest_price is not none %}
+            {{ "%.2f"|format(r.latest_price) }} <span class="meta">{{ r.currency }}</span>
+            {% else %}
+            <span class="meta">–</span>
+            {% endif %}
+          </td>
+          <td>{{ "%.2f"|format(r.target_buy_price) if r.target_buy_price is not none else "–" }}</td>
+          <td>{{ "%.2f"|format(r.target_sell_price) if r.target_sell_price is not none else "–" }}</td>
+          <td class="meta">
+            {% if r.dist_buy_pct is not none %}
+            <span title="distance to buy target">{{ "%+.1f"|format(r.dist_buy_pct) }}%</span>
+            {% elif r.dist_sell_pct is not none %}
+            <span title="distance to sell target">{{ "%+.1f"|format(r.dist_sell_pct) }}%</span>
+            {% else %}
+            –
+            {% endif %}
+          </td>
+          <td class="{{ r.flag_tone }}">{{ r.flag if r.flag else "–" }}</td>
+          <td>
+            <form method="post" action="/actions/stage" style="display:inline">
+              <input type="hidden" name="kind" value="watch_remove">
+              <input type="hidden" name="symbol" value="{{ r.symbol }}">
+              <input type="hidden" name="redirect_to" value="/watchlist">
+              <button type="submit" class="meta" style="background:none;border:none;cursor:pointer;color:var(--danger);padding:0">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% else %}
+  <section class="panel">
+    <p>No instruments on the watchlist yet. Use the <a href="#add">Add instrument</a> tab to get started.</p>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Targets hit tab -->
+<div id="targets-hit" class="tab-panel">
+  {% if targets_hit %}
+  <section class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Buy target</th>
+          <th>Sell target</th>
+          <th>Flag</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in targets_hit %}
+        <tr>
+          <td><strong>{{ r.symbol }}</strong></td>
+          <td>{{ r.name }}</td>
+          <td>
+            {{ "%.2f"|format(r.latest_price) }} <span class="meta">{{ r.currency }}</span>
+          </td>
+          <td>{{ "%.2f"|format(r.target_buy_price) if r.target_buy_price is not none else "–" }}</td>
+          <td>{{ "%.2f"|format(r.target_sell_price) if r.target_sell_price is not none else "–" }}</td>
+          <td class="{{ r.flag_tone }}"><strong>{{ r.flag }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% else %}
+  <section class="panel">
+    <p>No targets hit right now. Targets appear here when an instrument reaches its configured buy or sell price.</p>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Add instrument tab -->
+<div id="add" class="tab-panel">
+  <section class="panel">
+    <h3>Add to watchlist</h3>
+    <form method="post" action="/actions/stage" class="form-grid">
+      <input type="hidden" name="kind" value="watch_add">
+      <input type="hidden" name="redirect_to" value="/watchlist">
+      <label>Symbol <input type="text" name="symbol" placeholder="AAPL.US" required></label>
+      <label>Name <input type="text" name="name" placeholder="Apple Inc"></label>
+      <label>Currency <input type="text" name="currency" placeholder="USD"></label>
+      <label>Asset type <input type="text" name="asset_type" placeholder="stock"></label>
+      <div class="wide"><button type="submit">Stage watchlist add</button></div>
+    </form>
+    <p class="meta">The staged action appears in <a href="/decisions#actions">Actions &amp; Journal</a> for review before it is committed.</p>
+  </section>
+</div>
+
+{% endblock %}

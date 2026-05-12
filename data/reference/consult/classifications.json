@@ -1,0 +1,99 @@
+{
+  "symbols": {
+    "AAPL.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["us-tech"]
+    },
+    "GOOG.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology", "communication services"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["us-tech", "ai-infrastructure"]
+    },
+    "META.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology", "communication services"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["us-tech"]
+    },
+    "AVGO.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["semiconductors", "ai-infrastructure"]
+    },
+    "CRWD.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["cybersecurity"]
+    },
+    "NET.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology"],
+      "styles": ["growth", "mid-cap"],
+      "themes": ["cybersecurity"]
+    },
+    "PANW.US": {
+      "asset_type": "stock",
+      "geographies": ["US"],
+      "sectors": ["technology"],
+      "styles": ["growth", "large-cap"],
+      "themes": ["cybersecurity"]
+    },
+    "VUKE": {
+      "asset_type": "etf",
+      "geographies": ["UK"],
+      "sectors": ["financials", "healthcare", "energy", "consumer staples"],
+      "styles": ["large-cap", "dividend-income"],
+      "themes": ["uk equities", "dividend-income"]
+    },
+    "VWRP": {
+      "asset_type": "etf",
+      "geographies": ["Global", "US", "Emerging Markets", "UK", "Europe ex-UK", "Japan"],
+      "sectors": ["technology", "financials", "healthcare", "consumer discretionary"],
+      "styles": ["large-cap", "growth", "core"],
+      "themes": ["global equity"]
+    }
+  },
+  "watchlist_keywords": [
+    {
+      "label": "cybersecurity",
+      "keywords": ["cyber", "crowdstrike", "cloudflare", "palo alto", "zscaler", "okta"],
+      "risk_hint": 6
+    },
+    {
+      "label": "semiconductors",
+      "keywords": ["semiconductor", "broadcom", "nvidia", "asml", "tsmc"],
+      "risk_hint": 6
+    },
+    {
+      "label": "uk equities",
+      "keywords": ["ftse", "uk", "vuke", "ftse 250", "mid cap", "mid-cap"],
+      "risk_hint": 4
+    },
+    {
+      "label": "healthcare",
+      "keywords": ["healthcare", "pharma", "medical"],
+      "risk_hint": 4
+    },
+    {
+      "label": "dividend income",
+      "keywords": ["dividend", "income", "yield"],
+      "risk_hint": 3
+    },
+    {
+      "label": "emerging markets",
+      "keywords": ["emerging", "india", "latin america"],
+      "risk_hint": 5
+    }
+  ]
+}

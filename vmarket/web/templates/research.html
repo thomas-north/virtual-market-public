@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Research workspace</div>
+    <h2>Local evidence, symbol briefs, and research follow-ups</h2>
+    <p>Evidence stays local and source-aware. Use this workspace to connect findings back to portfolio decisions.</p>
+  </div>
+  {% if current_session %}
+  <div class="pill">Session #{{ current_session.id }}</div>
+  {% endif %}
+</section>
+
+<div class="tab-bar">
+  <a href="#workspace" class="tab-link">
+    Workspace
+    {% if workspace.tracked_symbols %}<span class="badge">{{ workspace.tracked_symbols|length }}</span>{% endif %}
+  </a>
+  <a href="#brief" class="tab-link">Evidence brief</a>
+</div>
+
+<!-- Workspace tab -->
+<div id="workspace" class="tab-panel">
+  <section class="grid two">
+    <article class="panel">
+      <h3>Tracked symbols</h3>
+      <ul class="list">
+        {% for tracked_symbol in workspace.tracked_symbols %}
+        <li><a href="#brief" onclick="document.querySelector('form[data-brief] input[name=symbol]').value='{{ tracked_symbol }}'; document.querySelector('form[data-brief]').submit();">{{ tracked_symbol }}</a></li>
+        {% else %}
+        <li class="meta">No tracked symbols yet. Collect research data first.</li>
+        {% endfor %}
+      </ul>
+      <p class="meta" style="margin-top:10px;">{{ workspace.normalized_files }} normalized evidence files · {{ workspace.recent_log_line or "No research log activity yet." }}</p>
+    </article>
+    <article class="panel">
+      <h3>Load a brief</h3>
+      <form method="post" action="/research" class="form-grid" data-brief>
+        <label class="wide">Symbol
+          <input type="text" name="symbol" value="{{ symbol or '' }}" placeholder="META.US">
+        </label>
+        <div class="wide"><button type="submit">Load evidence brief</button></div>
+      </form>
+    </article>
+  </section>
+
+  {% if workspace.recent_follow_ups %}
+  <section class="panel">
+    <h3>Recent follow-up tasks</h3>
+    <ul class="list">
+      {% for task in workspace.recent_follow_ups %}
+      <li>
+        <strong>{{ task.symbol }}</strong>
+        <div class="meta">{{ task.summary }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Brief tab -->
+<div id="brief" class="tab-panel">
+  {% if brief %}
+  <section class="grid two">
+    <article class="panel">
+      <h3>{{ brief.symbol }} — evidence brief</h3>
+      <pre>{{ brief.rendered_markdown }}</pre>
+    </article>
+    <article class="panel">
+      <h3>Use this brief</h3>
+      <form method="post" action="/actions/stage" class="form-grid">
+        <input type="hidden" name="kind" value="save_research_note">
+        <input type="hidden" name="source" value="research_follow_up">
+        <input type="hidden" name="section" value="questions">
+        <input type="hidden" name="title" value="{{ brief.symbol }} evidence brief">
+        <input type="hidden" name="body" value="Research brief reviewed for {{ brief.symbol }} with {{ brief.evidence_items|length }} evidence items.">
+        <input type="hidden" name="workflow" value="research-follow-up">
+        <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+        <input type="hidden" name="redirect_to" value="/research?session_id={{ current_session.id if current_session else '' }}">
+        <input type="hidden" name="explanation" value="Stage a research follow-up note from the cockpit research workspace.">
+        <div class="wide"><button type="submit">Stage research note</button></div>
+      </form>
+      <form method="post" action="/journal/save" class="form-grid" style="margin-top:12px;">
+        <input type="hidden" name="workflow" value="research-follow-up">
+        <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+        <input type="hidden" name="title" value="{{ brief.symbol }} research follow-up">
+        <input type="hidden" name="summary" value="Reviewed {{ brief.evidence_items|length }} evidence items for {{ brief.symbol }}.">
+        <input type="hidden" name="rationale" value="Research follow-up connected local evidence back to the portfolio workspace.">
+        <input type="hidden" name="related_symbols" value="{{ brief.symbol }}">
+        <input type="hidden" name="redirect_to" value="/research?session_id={{ current_session.id if current_session else '' }}">
+        <div class="wide"><button type="submit">Save to journal</button></div>
+      </form>
+      {% if current_session %}
+      <p class="meta" style="margin-top:12px;"><a href="/agent?session_id={{ current_session.id }}">Open agent handoff for this session →</a></p>
+      {% endif %}
+    </article>
+  </section>
+  {% else %}
+  <section class="panel">
+    <h3>No brief loaded</h3>
+    <p>Load a brief from the Workspace tab by entering a symbol or clicking a tracked symbol.</p>
+    <form method="post" action="/research" class="form-grid">
+      <label class="wide">Symbol
+        <input type="text" name="symbol" value="{{ symbol or '' }}" placeholder="META.US">
+      </label>
+      <div class="wide"><button type="submit">Load evidence brief</button></div>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

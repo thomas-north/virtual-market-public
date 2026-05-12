@@ -1,0 +1,80 @@
+[
+  {
+    "identifier": "VUKE",
+    "aliases": ["Vanguard FTSE 100 UCITS ETF", "FTSE 100 UCITS ETF"],
+    "fund_name": "Vanguard FTSE 100 UCITS ETF (GBP) Distributing",
+    "ticker": "VUKE",
+    "isin": "IE00B810Q511",
+    "ter_pct": null,
+    "ocf_pct": null,
+    "aum_value": null,
+    "holdings_count": 100,
+    "top_holdings": [
+      {"name": "AstraZeneca PLC", "weight_pct": 8.94767, "sector": "Health Care", "country": "GB"},
+      {"name": "HSBC Holdings PLC", "weight_pct": 8.52392, "sector": "Financials", "country": "GB"},
+      {"name": "Shell PLC", "weight_pct": 8.28597, "sector": "Energy", "country": "GB"},
+      {"name": "British American Tobacco PLC", "weight_pct": 3.73880, "sector": "Consumer Staples", "country": "GB"},
+      {"name": "Unilever PLC", "weight_pct": 3.65986, "sector": "Consumer Staples", "country": "GB"}
+    ],
+    "country_exposure": [
+      {"label": "United Kingdom", "weight": 0.9979}
+    ],
+    "sector_exposure": [
+      {"label": "Financials", "weight": 0.185},
+      {"label": "Health Care", "weight": 0.129},
+      {"label": "Energy", "weight": 0.118}
+    ],
+    "distribution_policy": "distributing",
+    "replication_method": "physical",
+    "domicile": "Ireland",
+    "benchmark_index": "FTSE 100 Index",
+    "factsheet_date": null,
+    "source_url": "https://www.vanguard.co.uk/uk-fund-directory/product/etf/equity/9509/ftse-100-ucits-etf-gbp-distributing",
+    "source_type": "official_product_page",
+    "fallback_used": false,
+    "verification_notes": [
+      "Verified from Vanguard UK fund directory product page and holdings snippet.",
+      "ISIN cross-checked against London Stock Exchange ETF factsheet publication.",
+      "OCF and AUM were not reliably visible in the captured source snippet, so they remain unverified."
+    ]
+  },
+  {
+    "identifier": "VWRP",
+    "aliases": ["FTSE All-World UCITS ETF", "Vanguard FTSE All-World UCITS ETF"],
+    "fund_name": "Vanguard FTSE All-World UCITS ETF (USD) Accumulating",
+    "ticker": "VWRP",
+    "isin": null,
+    "ter_pct": null,
+    "ocf_pct": null,
+    "aum_value": "US$35.74 B share class assets; US$57.48 B total assets",
+    "holdings_count": null,
+    "top_holdings": [
+      {"name": "NVIDIA Corp", "weight_pct": 4.12776, "sector": "Technology", "country": "US"},
+      {"name": "Apple Inc", "weight_pct": 3.83179, "sector": "Technology", "country": "US"},
+      {"name": "Microsoft Corp", "weight_pct": 2.89906, "sector": "Technology", "country": "US"},
+      {"name": "Amazon.com Inc", "weight_pct": 2.00565, "sector": "Consumer Discretionary", "country": "US"},
+      {"name": "Meta Platforms Inc", "weight_pct": 1.40955, "sector": "Technology", "country": "US"}
+    ],
+    "country_exposure": [
+      {"label": "United Kingdom", "weight": 0.0353},
+      {"label": "Europe", "weight": 0.0343}
+    ],
+    "sector_exposure": [
+      {"label": "Technology", "weight": 0.246},
+      {"label": "Financials", "weight": 0.151},
+      {"label": "Health Care", "weight": 0.103}
+    ],
+    "distribution_policy": "accumulating",
+    "replication_method": "physical",
+    "domicile": "Ireland",
+    "benchmark_index": "FTSE All-World Index",
+    "factsheet_date": null,
+    "source_url": "https://www.vanguard.co.uk/uk-fund-directory/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating",
+    "source_type": "official_product_page",
+    "fallback_used": false,
+    "verification_notes": [
+      "Verified from Vanguard UK fund directory product page snippets.",
+      "Top holdings were captured from the holdings details section on the official page."
+    ]
+  }
+]

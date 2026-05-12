@@ -18,9 +18,6 @@ class PositionDTO:
     unrealised_pnl_pct: Decimal | None
     value_in_base: Decimal | None
     asset_type: str | None = None
-    provenance_kind: str = "exact"
-    provenance_confidence: float = 1.0
-    provenance_note: str | None = None
     price_status: str = "missing"
     price_status_note: str = ""
     fx_status: str = "not_needed"

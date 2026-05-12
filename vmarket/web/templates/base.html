@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }} · Virtual Market</title>
+  <link rel="stylesheet" href="/static/cockpit.css">
+  <noscript><style>
+    /* Without JS all tab panels are visible; hide the tab bar since it doesn't switch anything */
+    .tab-panel { display: block !important; }
+    .tab-bar { display: none; }
+  </style></noscript>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="eyebrow">Virtual Market</div>
+        <h1>Agent Cockpit</h1>
+      </div>
+      <nav class="nav">
+        <a href="/" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/portfolio" class="{% if active_page == 'portfolio' %}active{% endif %}">Portfolio</a>
+        <a href="/watchlist" class="{% if active_page == 'watchlist' %}active{% endif %}">Watchlist</a>
+        <a href="/consult" class="{% if active_page == 'consult' %}active{% endif %}">Consult</a>
+        <a href="/themes" class="{% if active_page == 'themes' %}active{% endif %}">Themes</a>
+        <a href="/research" class="{% if active_page == 'research' %}active{% endif %}">Research</a>
+        <div class="nav-divider"></div>
+        <a href="/memo" class="nav-secondary {% if active_page == 'memo' %}active{% endif %}">Daily Memo</a>
+        <a href="/decisions" class="nav-secondary {% if active_page == 'decisions' %}active{% endif %}">Actions &amp; Journal</a>
+        <a href="/agent" class="nav-secondary {% if active_page == 'agent' %}active{% endif %}">Agent</a>
+        <a href="/onboarding" class="nav-secondary {% if active_page == 'onboarding' %}active{% endif %}">Onboarding</a>
+        <a href="/workflows" class="nav-secondary {% if active_page == 'workflows' %}active{% endif %}">Workflows</a>
+      </nav>
+    </aside>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script>
+  (function () {
+    function getHash() { return window.location.hash.slice(1); }
+    function activate(id) {
+      document.querySelectorAll('.tab-panel').forEach(function (el) { el.hidden = true; });
+      document.querySelectorAll('.tab-link').forEach(function (el) { el.classList.remove('active'); });
+      var panel = document.getElementById(id);
+      if (panel) panel.hidden = false;
+      document.querySelectorAll('.tab-link[href="#' + id + '"]').forEach(function (el) { el.classList.add('active'); });
+    }
+    function init() {
+      var panels = document.querySelectorAll('.tab-panel');
+      if (!panels.length) return;
+      var hash = getHash();
+      var target = (hash && document.getElementById(hash)) ? hash : panels[0].id;
+      activate(target);
+    }
+    document.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('hashchange', function () {
+      var hash = getHash();
+      if (hash && document.getElementById(hash)) activate(hash);
+    });
+  })();
+  </script>
+</body>
+</html>
