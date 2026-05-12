@@ -3,7 +3,7 @@ from decimal import Decimal
 import pytest
 
 from vmarket.errors import InsufficientCashError
-from vmarket.services.cash_service import deposit, withdraw, get_all_balances
+from vmarket.services.cash_service import deposit, get_all_balances, withdraw
 
 
 def test_deposit_increases_balance(session):

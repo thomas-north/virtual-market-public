@@ -28,7 +28,8 @@ Do not commit:
 
 ## Current public product surface
 
-The public repo currently exposes the core simulator and research flows.
+The public repo currently exposes the core simulator, diagnostics, reporting,
+and research flows.
 
 Typical commands:
 
@@ -38,7 +39,9 @@ Typical commands:
 .venv/bin/vmarket watch add AAPL.US --name "Apple Inc" --currency USD --asset-type stock
 .venv/bin/vmarket sync prices --days 30
 .venv/bin/vmarket portfolio
+.venv/bin/vmarket report overview
 .venv/bin/vmarket memo daily
+.venv/bin/vmarket doctor
 .venv/bin/vmarket research brief META.US
 ```
 
