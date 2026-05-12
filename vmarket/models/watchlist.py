@@ -11,7 +11,11 @@ class WatchlistItem(Base):
     __tablename__ = "watchlist_items"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    instrument_id: Mapped[int] = mapped_column(ForeignKey("instruments.id"), unique=True, nullable=False)
+    instrument_id: Mapped[int] = mapped_column(
+        ForeignKey("instruments.id"),
+        unique=True,
+        nullable=False,
+    )
     target_buy_price: Mapped[Decimal | None] = mapped_column(Numeric(18, 6))
     target_sell_price: Mapped[Decimal | None] = mapped_column(Numeric(18, 6))
     notes: Mapped[str | None] = mapped_column(String(512))

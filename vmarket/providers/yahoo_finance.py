@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
 import requests
@@ -28,8 +28,23 @@ class YahooFinanceProvider:
         return bars
 
     def _fetch_symbol(self, symbol: str, start_date: date, end_date: date) -> list[PriceBarDTO]:
-        start_ts = int(datetime(start_date.year, start_date.month, start_date.day, tzinfo=timezone.utc).timestamp())
-        end_ts = int(datetime(end_date.year, end_date.month, end_date.day, 23, 59, 59, tzinfo=timezone.utc).timestamp())
+        start_dt = datetime(
+            start_date.year,
+            start_date.month,
+            start_date.day,
+            tzinfo=UTC,
+        )
+        end_dt = datetime(
+            end_date.year,
+            end_date.month,
+            end_date.day,
+            23,
+            59,
+            59,
+            tzinfo=UTC,
+        )
+        start_ts = int(start_dt.timestamp())
+        end_ts = int(end_dt.timestamp())
 
         url = _CHART_URL.format(symbol=symbol)
         params = {"interval": "1d", "period1": start_ts, "period2": end_ts}
@@ -59,7 +74,7 @@ class YahooFinanceProvider:
             close_val = closes[i] if i < len(closes) else None
             if close_val is None:
                 continue
-            row_date = datetime.fromtimestamp(ts, tz=timezone.utc).date()
+            row_date = datetime.fromtimestamp(ts, tz=UTC).date()
             bars.append(
                 PriceBarDTO(
                     symbol=symbol,

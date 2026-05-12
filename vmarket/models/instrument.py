@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import String, Boolean, DateTime, func
+from sqlalchemy import Boolean, DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from vmarket.db import Base
@@ -21,6 +21,12 @@ class Instrument(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=func.now(), onupdate=func.now())
 
-    price_bars: Mapped[list["PriceBar"]] = relationship(back_populates="instrument", cascade="all, delete-orphan")  # noqa: F821
+    price_bars: Mapped[list["PriceBar"]] = relationship(  # noqa: F821
+        back_populates="instrument",
+        cascade="all, delete-orphan",
+    )
     trades: Mapped[list["Trade"]] = relationship(back_populates="instrument")  # noqa: F821
-    watchlist_item: Mapped["WatchlistItem | None"] = relationship(back_populates="instrument", uselist=False)  # noqa: F821
+    watchlist_item: Mapped["WatchlistItem | None"] = relationship(  # noqa: F821
+        back_populates="instrument",
+        uselist=False,
+    )

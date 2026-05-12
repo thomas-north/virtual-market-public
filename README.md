@@ -1,103 +1,152 @@
 # Virtual Market
 
-A local fake-money investing simulator using real daily market prices.
+A local investment simulator and decision lab for agent-assisted portfolio thinking.
 
 > **Safety:** This app never connects to a real brokerage. All cash and trades are simulated.
 
 ---
 
-## What you can ask your AI agent to do
+## What This Repo Is
 
-Virtual Market is designed to be operated by an AI agent (Claude Code, or any agent
-that can run shell commands). Here are examples of natural language instructions
-you can give — the agent reads [AGENT.md](AGENT.md) to know exactly how to carry them out.
+`virtual-market-public` is the open-source home of Virtual Market.
 
-**Cash**
-- "Deposit £1,000 cash"
-- "How much cash do I have?"
-- "Withdraw £200"
+It is intentionally maintained as a **curated public mirror** of a faster-moving
+private working repository. That means:
 
-**Portfolio**
-- "Show me my portfolio"
-- "What are my unrealised gains?"
-- "Show my trade history"
+- the public repo is the place for outside contributors, issues, and PRs
+- the private repo is where feature work may be incubated first
+- public updates are published in clear, reviewable batches instead of replaying
+  every private commit verbatim
 
-**Buying and selling**
-- "Invest £850 in NASDAQ:NBIS"
-- "Buy 2 shares of Alphabet"
-- "Sell half my Palo Alto position"
-- "Sell all my Zscaler"
+The product direction is a **cockpit-first local decision lab** for portfolio
+thinking with an external coding agent. The public repo is being brought into
+that shape in staged sync PRs.
 
-**Watchlist**
+---
+
+## Current Public Status
+
+Today, this public repo already supports:
+
+- fake-money cash, trades, holdings, and watchlists
+- daily market price sync
+- FX sync
+- portfolio valuation
+- memo generation
+- research evidence storage and brief rendering
+
+The next public sync waves will add:
+
+- first-run onboarding and import drafts
+- the local cockpit web app
+- thematic analysis
+- portfolio consultation
+- staged actions, workspace sessions, and decision journaling
+
+So the long-term product story is already set, even though this public repo is
+still catching up to it.
+
+---
+
+## Fastest Path For A New User
+
+```bash
+git clone https://github.com/thomas-north/virtual-market-public.git
+cd virtual-market-public
+python -m venv .venv
+. .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env
+vmarket init
+```
+
+Then try:
+
+```bash
+vmarket cash deposit 10000 --currency GBP
+vmarket watch add AAPL.US --name "Apple Inc" --currency USD --asset-type stock
+vmarket sync prices --days 30
+vmarket portfolio
+vmarket memo daily
+```
+
+---
+
+## Private Data Model
+
+Local state should live in a gitignored `user_data/` workspace:
+
+```text
+user_data/vmarket.sqlite
+user_data/imports/
+user_data/screenshots/
+user_data/exports/
+user_data/notes/
+```
+
+This public repo is for code. Your personal simulated portfolio, notes, and
+imports should stay local and untracked.
+
+The current public codebase still supports explicit database overrides through
+`VMARKET_DB_PATH`, and the staged sync PRs will finish aligning the runtime
+default with the `user_data/` layout.
+
+---
+
+## What You Can Ask Your AI Agent To Do
+
+Virtual Market is designed to work well with external coding agents such as
+Codex, Claude Code, or OpenClaw.
+
+Examples:
+
+- "Deposit GBP 1,000 of fake cash"
+- "Show me my current portfolio"
 - "Add Apple to my watchlist"
-- "Remove Intuit from my watchlist"
-- "Set a buy alert on Cloudflare at £180"
-- "Show my watchlist with current prices"
-
-**Market data and research**
 - "Sync today's prices"
-- "What's the current price of Palo Alto?"
-- "Show me GOOG's price history for the last 30 days"
-- "Research Rubrik for me — is it worth buying?"
+- "Generate today's memo"
+- "Research META.US and summarise the evidence"
 
-**Reports and charts**
-- "Generate today's portfolio memo"
-- "Show me the allocation chart"
-- "Export the P/L chart to HTML"
-
-The agent handles the translation from plain English to the correct CLI commands.
-For the full agent reference, see [AGENT.md](AGENT.md).
+The public agent workflow is documented in [AGENT.md](AGENT.md).
 
 ---
 
 ## Install
 
 ```bash
-cd virtual-market
 python -m venv .venv
 . .venv/bin/activate
 pip install -e ".[dev]"
-cp .env.example .env      # add ALPHA_VANTAGE_API_KEY if you have one
-vmarket init
-```
-
-## Quick start
-
-```bash
-vmarket cash deposit 10000 --currency GBP
-vmarket watch add AAPL.US --name "Apple Inc" --currency USD --asset-type stock
-vmarket sync prices --days 30
-vmarket watchlist
-vmarket buy AAPL.US --quantity 5
-vmarket portfolio
-vmarket memo daily
+cp .env.example .env
 ```
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `vmarket init` | Initialise database and default portfolio |
-| `vmarket cash deposit <amount>` | Deposit fake cash |
-| `vmarket cash withdraw <amount>` | Withdraw fake cash |
-| `vmarket cash balance` | Show cash balances |
-| `vmarket watch add <symbol>` | Add to watchlist |
-| `vmarket watch remove <symbol>` | Remove from watchlist |
-| `vmarket watch target <symbol>` | Set buy/sell price targets |
-| `vmarket watchlist` | Show watchlist with current prices |
-| `vmarket sync prices` | Sync daily prices (Stooq → Yahoo → Alpha Vantage) |
-| `vmarket sync fx` | Sync GBP/USD and GBP/EUR FX rates |
-| `vmarket prices <symbol>` | Show recent prices for one instrument |
-| `vmarket buy <symbol> --quantity N` | Buy using fake cash |
-| `vmarket sell <symbol> --quantity N` | Sell holdings |
-| `vmarket trades` | Show trade history |
-| `vmarket portfolio` | Show holdings and unrealised P/L |
-| `vmarket chart portfolio` | Portfolio value chart |
-| `vmarket chart allocation` | Allocation breakdown chart |
-| `vmarket chart pnl` | P/L per holding chart |
-| `vmarket memo daily` | Generate daily Markdown memo |
+Current public commands include:
 
-## Symbol format
+- `vmarket init`
+- `vmarket cash ...`
+- `vmarket watch ...`
+- `vmarket watchlist`
+- `vmarket sync prices`
+- `vmarket sync fx`
+- `vmarket buy`
+- `vmarket sell`
+- `vmarket trades`
+- `vmarket portfolio`
+- `vmarket chart ...`
+- `vmarket memo daily`
+- `vmarket research ...`
+
+Run:
+
+```bash
+vmarket --help
+```
+
+---
+
+## Symbol Format
 
 | Market | Format | Example |
 |--------|--------|---------|
@@ -105,47 +154,38 @@ vmarket memo daily
 | London Stock Exchange | `TICKER.L` | `CIBR.L`, `BUG.L` |
 | UK unit trusts (OEICs) | 7-char SEDOL | `BD6PG78` |
 
-## Environment variables
+---
+
+## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `VMARKET_DB_PATH` | `./data/vmarket.sqlite` | SQLite database path |
+| `VMARKET_DB_PATH` | `./user_data/vmarket.sqlite` | SQLite database path |
 | `VMARKET_BASE_CURRENCY` | `GBP` | Portfolio base currency |
-| `ALPHA_VANTAGE_API_KEY` | *(empty)* | Optional third-tier price provider (25 req/day free) |
+| `ALPHA_VANTAGE_API_KEY` | *(empty)* | Optional fallback price provider |
+| `VMARKET_SEC_USER_AGENT` | example value in `.env.example` | Identifier for SEC requests |
 
-## Market data
+---
 
-Prices are fetched via a three-provider chain, tried in order:
+## Market Data
 
-1. **[Stooq](https://stooq.com)** — free, no key required
-2. **[Yahoo Finance](https://finance.yahoo.com)** — free, no key required, handles LSE (`.L`) tickers
-3. **[Alpha Vantage](https://www.alphavantage.co)** — free key required, US stocks only, 25 req/day
+Prices are fetched via a provider chain:
 
-FX rates use **[Frankfurter](https://www.frankfurter.app)** — free, no key required.
+1. **[Stooq](https://stooq.com)**
+2. **[Yahoo Finance](https://finance.yahoo.com)**
+3. **[Alpha Vantage](https://www.alphavantage.co)** when configured
 
-## AI agent skills (Claude Code)
+FX rates use **[Frankfurter](https://www.frankfurter.app)**.
 
-For Claude Code agents, ready-made skills live in `.claude/commands/`:
+---
 
-| Skill | What it does |
-|-------|-------------|
-| `/vm-sync` | Full daily sync: prices, FX, memo, HTML charts |
-| `/vm-brief` | Morning portfolio brief |
-| `/vm-research SYMBOL` | Research an instrument |
-| `/vm-trade buy SYMBOL QTY` | Guided buy/sell with confirmation |
-| `/vm-cash deposit 500` | Cash management |
-| `/vm-watch add SYMBOL` | Watchlist management |
+## Contributing
 
-## Automated daily sync
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, checks, and the curated
+public/private sync workflow.
 
-A cron job runs `scripts/sync_daily.sh` each weeknight at 22:30 BST:
+---
 
-```
-30 21 * * 1-5 /path/to/virtual-market/scripts/sync_daily.sh >> /path/to/virtual-market/logs/sync.log 2>&1
-```
+## License
 
-## Tests
-
-```bash
-pytest
-```
+Licensed under [Apache-2.0](LICENSE).
