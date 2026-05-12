@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Theme workspace</div>
+    <h2>Analyse a theme against the current portfolio</h2>
+    <p>Deterministic local analysis — same engine as <code>vmarket theme analyse</code>.</p>
+  </div>
+  {% if current_session %}
+  <div class="pill">Session #{{ current_session.id }}</div>
+  {% endif %}
+</section>
+
+<!-- Form — collapsed when results are present -->
+{% if result %}
+<details class="advanced" style="margin-bottom:18px;border:1px solid var(--border);border-radius:14px;padding:14px 20px;">
+  <summary style="font-size:14px;color:var(--ink);font-weight:600;">Modify analysis settings</summary>
+  <div style="padding-top:14px;">
+{% else %}
+<section class="panel" style="margin-bottom:18px;">
+  <h3>Configure analysis</h3>
+{% endif %}
+
+  <form method="post" action="/themes/analyse" class="form-grid">
+    <label>Theme
+      <select name="theme">
+        {% for theme in overview.supported_themes %}
+        <option value="{{ theme.theme_id }}" {% if form_values.theme == theme.theme_id %}selected{% endif %}>{{ theme.label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Amount
+      <input type="text" name="amount" value="{{ form_values.amount or '' }}" placeholder="1800">
+    </label>
+    <details class="advanced wide">
+      <summary>Advanced options</summary>
+      <div class="form-grid">
+        <label>Allocation currency
+          <input type="text" name="allocation_currency" value="{{ form_values.allocation_currency or '' }}" placeholder="GBP">
+        </label>
+        <label>Investor country
+          <input type="text" name="investor_country" value="{{ form_values.investor_country }}">
+        </label>
+        <label>Volatility tolerance
+          <select name="volatility_tolerance">
+            {% for value in ["low", "medium", "high"] %}
+            <option value="{{ value }}" {% if form_values.volatility_tolerance == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Time horizon
+          <select name="time_horizon">
+            {% for value in ["short", "medium", "long"] %}
+            <option value="{{ value }}" {% if form_values.time_horizon == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Target role
+          <select name="target_role">
+            {% for value in ["auto", "core", "satellite"] %}
+            <option value="{{ value }}" {% if form_values.target_role == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Implementation scope
+          <select name="implementation_scope">
+            {% for value in ["both", "etf", "basket"] %}
+            <option value="{{ value }}" {% if form_values.implementation_scope == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="wide">Preferred companies
+          <textarea name="preferred_companies" rows="3" placeholder="CrowdStrike, Cloudflare, Palo Alto">{{ form_values.preferred_companies or '' }}</textarea>
+        </label>
+      </div>
+    </details>
+    <div class="wide">
+      <button type="submit">Analyse theme</button>
+    </div>
+  </form>
+
+{% if result %}
+  </div>
+</details>
+{% else %}
+</section>
+{% endif %}
+
+{% if result %}
+<!-- Results phase -->
+<div class="phase-label">Results — {{ result.theme_label }}</div>
+
+<div class="tab-bar">
+  <a href="#best-fit" class="tab-link">Best fit</a>
+  <a href="#risk-adjusted" class="tab-link">Risk-adjusted</a>
+  <a href="#all-candidates" class="tab-link">
+    All candidates
+    {% if result.candidates %}<span class="badge">{{ result.candidates|length }}</span>{% endif %}
+  </a>
+</div>
+
+<!-- Best fit tab -->
+<div id="best-fit" class="tab-panel">
+  <section class="grid two">
+    <article class="panel">
+      <h3>Best thematic fit</h3>
+      <p class="strong">{{ result.best_thematic_fit.name }} <span class="meta">({{ result.best_thematic_fit.implementation_kind }})</span></p>
+      <p>{{ result.best_thematic_fit.recommendation.why_this_fits }}</p>
+      <p class="meta">Main risk: {{ result.best_thematic_fit.recommendation.main_risk }}</p>
+      <p class="meta">What would change this: {{ result.best_thematic_fit.recommendation.what_would_change }}</p>
+    </article>
+    <article class="panel">
+      <h3>Why the answer changes</h3>
+      <p>{{ result.explanation_of_why_result_changed }}</p>
+      <p class="meta">{{ result.position_sizing_guidance }}</p>
+    </article>
+  </section>
+
+  <div class="sticky-actions">
+    {% if result.best_thematic_fit.implementation_kind == "etf" and result.best_thematic_fit.listing_symbol %}
+    <form method="post" action="/actions/stage" class="inline-form">
+      <input type="hidden" name="kind" value="watch_add">
+      <input type="hidden" name="source" value="theme_analysis">
+      <input type="hidden" name="symbol" value="{{ result.best_thematic_fit.listing_symbol }}">
+      <input type="hidden" name="name" value="{{ result.best_thematic_fit.name }}">
+      <input type="hidden" name="currency" value="{{ result.best_thematic_fit.listing_currency or '' }}">
+      <input type="hidden" name="asset_type" value="etf">
+      <input type="hidden" name="explanation" value="Stage best thematic fit from {{ result.theme_label }} analysis.">
+      <input type="hidden" name="workflow" value="thematic-analysis">
+      <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+      <input type="hidden" name="redirect_to" value="/themes?session_id={{ current_session.id if current_session else '' }}">
+      <button type="submit">Stage best-fit watchlist add</button>
+    </form>
+    {% endif %}
+    <form method="post" action="/actions/stage" class="inline-form">
+      <input type="hidden" name="kind" value="save_research_note">
+      <input type="hidden" name="source" value="theme_analysis">
+      <input type="hidden" name="section" value="questions">
+      <input type="hidden" name="title" value="{{ result.theme_label }} follow-up">
+      <input type="hidden" name="body" value="Best fit: {{ result.best_thematic_fit.name }}. Best risk-adjusted: {{ result.best_risk_adjusted_option.name }}. Main risk: {{ result.best_thematic_fit.recommendation.main_risk }}.">
+      <input type="hidden" name="explanation" value="Persist theme analysis notes.">
+      <input type="hidden" name="workflow" value="thematic-analysis">
+      <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+      <input type="hidden" name="redirect_to" value="/themes?session_id={{ current_session.id if current_session else '' }}">
+      <button type="submit">Stage research note</button>
+    </form>
+    <form method="post" action="/journal/save" class="inline-form">
+      <input type="hidden" name="workflow" value="thematic-analysis">
+      <input type="hidden" name="workflow_session_id" value="{{ current_session.id if current_session else '' }}">
+      <input type="hidden" name="title" value="{{ result.theme_label }} decision">
+      <input type="hidden" name="summary" value="Best fit: {{ result.best_thematic_fit.name }}. Best risk-adjusted: {{ result.best_risk_adjusted_option.name }}.">
+      <input type="hidden" name="rationale" value="{{ result.best_thematic_fit.recommendation.why_this_fits }}">
+      <input type="hidden" name="open_questions" value="{{ result.best_thematic_fit.recommendation.what_would_change }}">
+      <input type="hidden" name="related_themes" value="{{ result.theme_id }}">
+      <input type="hidden" name="related_symbols" value="{{ result.best_thematic_fit.listing_symbol or '' }}">
+      <input type="hidden" name="redirect_to" value="/themes?session_id={{ current_session.id if current_session else '' }}">
+      <button type="submit">Save to journal</button>
+    </form>
+    {% if current_session %}
+    <a href="/agent?session_id={{ current_session.id }}" class="meta">Agent handoff →</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Risk-adjusted tab -->
+<div id="risk-adjusted" class="tab-panel">
+  <section class="grid two">
+    <article class="panel">
+      <h3>Best risk-adjusted implementation</h3>
+      <p class="strong">{{ result.best_risk_adjusted_option.name }} <span class="meta">({{ result.best_risk_adjusted_option.implementation_kind }})</span></p>
+      <p>{{ result.best_risk_adjusted_option.recommendation.why_this_fits }}</p>
+      <p class="meta">Main risk: {{ result.best_risk_adjusted_option.recommendation.main_risk }}</p>
+      <p class="meta">What would change this: {{ result.best_risk_adjusted_option.recommendation.what_would_change }}</p>
+    </article>
+    <article class="panel">
+      <h3>Research follow-up</h3>
+      {% if result.best_thematic_fit.listing_symbol %}
+      <p><a href="/research?symbol={{ result.best_thematic_fit.listing_symbol }}">Open research for {{ result.best_thematic_fit.listing_symbol }} →</a></p>
+      {% else %}
+      <p><a href="/research">Open the research workspace →</a></p>
+      {% endif %}
+    </article>
+  </section>
+</div>
+
+<!-- All candidates tab -->
+<div id="all-candidates" class="tab-panel">
+  <section class="panel">
+    <h3>All candidates scored</h3>
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Kind</th><th>Thematic fit</th><th>Risk-adjusted</th><th>Warnings</th></tr>
+      </thead>
+      <tbody>
+        {% for candidate in result.candidates %}
+        <tr>
+          <td>{{ candidate.name }}</td>
+          <td>{{ candidate.implementation_kind }}</td>
+          <td>{{ "%.1f"|format(candidate.thematic_fit_score) }}</td>
+          <td>{{ "%.1f"|format(candidate.risk_adjusted_score) }}</td>
+          <td class="meta">{{ candidate.warnings|join("; ") or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+{% endif %}
+{% endblock %}

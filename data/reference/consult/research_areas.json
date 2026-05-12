@@ -1,0 +1,80 @@
+[
+  {
+    "area_id": "uk-mid-caps",
+    "label": "UK mid caps",
+    "summary": "Research FTSE 250 or broader UK mid-cap funds if you want more UK growth exposure outside the mega-cap FTSE 100 names.",
+    "why_now": "This can add different domestic economic drivers than U.S. software and semiconductor holdings.",
+    "main_risks": ["UK mid caps can be more cyclical and less liquid than global mega caps."],
+    "product_types": ["ETF", "index fund", "investment trust"],
+    "min_risk": 4,
+    "max_risk": 6,
+    "excluded_by": ["china exposure"],
+    "respects": [],
+    "watchlist_key": "uk equities"
+  },
+  {
+    "area_id": "healthcare-diversifier",
+    "label": "Healthcare diversification",
+    "summary": "Research broad healthcare funds rather than jumping straight to biotech if you want a growth area with different return drivers from software.",
+    "why_now": "Healthcare can diversify a portfolio that is already dominated by U.S. mega-cap technology and thematic software exposure.",
+    "main_risks": ["Regulatory risk and idiosyncratic drug-development risk still matter, especially in narrower funds."],
+    "product_types": ["ETF", "fund"],
+    "min_risk": 3,
+    "max_risk": 6,
+    "excluded_by": [],
+    "respects": ["healthcare"],
+    "watchlist_key": "healthcare",
+    "trigger_warnings": ["technology-tilt", "us-tilt"]
+  },
+  {
+    "area_id": "global-value-income",
+    "label": "Global value or dividend income",
+    "summary": "Research global value or dividend strategies if you want to offset a growth-heavy portfolio with different factor exposure.",
+    "why_now": "A value or income sleeve can reduce reliance on the same technology-led valuation drivers.",
+    "main_risks": ["Value and income strategies can lag in momentum-driven markets."],
+    "product_types": ["ETF", "fund", "investment trust"],
+    "min_risk": 2,
+    "max_risk": 5,
+    "excluded_by": [],
+    "respects": ["dividend income"],
+    "watchlist_key": "dividend income",
+    "trigger_warnings": ["technology-tilt"]
+  },
+  {
+    "area_id": "short-duration-bonds",
+    "label": "Short-duration bonds or money market funds",
+    "summary": "Research short-duration bond or money market funds if stability and capital preservation matter more than adding more equity risk.",
+    "why_now": "Lower-risk diversifiers can help if the current portfolio feels too equity-heavy for the user’s tolerance.",
+    "main_risks": ["Expected return is lower than equities and inflation can still erode real value."],
+    "product_types": ["ETF", "fund"],
+    "min_risk": 1,
+    "max_risk": 3,
+    "excluded_by": [],
+    "respects": []
+  },
+  {
+    "area_id": "emerging-markets",
+    "label": "Broad emerging markets",
+    "summary": "Research broad emerging-market funds rather than narrow country bets if you want to expand beyond U.S. and UK developed-market exposure.",
+    "why_now": "This can widen geographic exposure, but it should be sized carefully alongside existing growth concentration.",
+    "main_risks": ["Higher volatility, governance differences, and currency risk can be material."],
+    "product_types": ["ETF", "fund"],
+    "min_risk": 5,
+    "max_risk": 7,
+    "excluded_by": ["china exposure"],
+    "respects": [],
+    "watchlist_key": "emerging markets"
+  },
+  {
+    "area_id": "global-small-caps",
+    "label": "Global small caps",
+    "summary": "Research global small-cap funds if the portfolio is concentrated in large-cap leaders and you want a broader opportunity set.",
+    "why_now": "A small-cap sleeve can diversify away from dominant mega-cap index constituents.",
+    "main_risks": ["Small caps can be more volatile and more sensitive to liquidity conditions."],
+    "product_types": ["ETF", "fund"],
+    "min_risk": 5,
+    "max_risk": 7,
+    "excluded_by": [],
+    "respects": []
+  }
+]

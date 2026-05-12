@@ -1,0 +1,149 @@
+{
+  "theme_id": "robotics",
+  "label": "Robotics & Automation",
+  "summary": "Automation exposure across industrial robotics, software, and enabling components.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["robotics", "automation", "industrial automation", "factory automation"],
+  "starter_stock_basket": {
+    "basket_id": "robotics-equal-weight-basket",
+    "name": "Robotics & Automation Equal-Weight Basket",
+    "summary": "Equal-weight basket across robotics hardware, controls, and enabling software.",
+    "holdings": [
+      {"name": "ABB", "symbol": "ABBN.SW", "weight": 20, "tags": ["industrial"]},
+      {"name": "Fanuc", "symbol": "6954.T", "weight": 20, "tags": ["robotics"]},
+      {"name": "Keyence", "symbol": "6861.T", "weight": 20, "tags": ["sensors"]},
+      {"name": "Rockwell Automation", "symbol": "ROK.US", "weight": 20, "tags": ["controls"]},
+      {"name": "Siemens", "symbol": "SIE.DE", "weight": 20, "tags": ["industrial software"]}
+    ],
+    "rebalancing_note": "Direct automation baskets are more cyclical and more hands-on than ETF wrappers."
+  },
+  "candidates": [
+    {
+      "profile_id": "BOTZ",
+      "name": "Robotics Pure-Play ETF",
+      "issuer": "Starter Research",
+      "summary": "Higher-purity robotics sleeve with more industrial and hardware concentration.",
+      "theme_tags": ["robotics", "automation"],
+      "facts": {
+        "top_holdings": [
+          {"name": "ABB", "symbol": "ABBN.SW", "weight": 6.0, "tags": ["industrial"]},
+          {"name": "Fanuc", "symbol": "6954.T", "weight": 5.8, "tags": ["robotics"]},
+          {"name": "Keyence", "symbol": "6861.T", "weight": 5.3, "tags": ["sensors"]},
+          {"name": "Intuitive Surgical", "symbol": "ISRG.US", "weight": 4.8, "tags": ["robotics"]},
+          {"name": "Yaskawa", "symbol": "6506.T", "weight": 4.3, "tags": ["motion"]}
+        ],
+        "holdings_count": 39,
+        "ter_pct": 0.50,
+        "aum_usd_millions": 540,
+        "volatility_3y_pct": 21.0,
+        "methodology_summary": "Focused robotics and automation basket with a hardware and systems tilt.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "BOTZ.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "medium",
+      "purity_score": 84,
+      "concentration_risk": 64,
+      "volatility_risk": 66,
+      "growth_tilt": 58,
+      "infrastructure_tilt": 64,
+      "notes_purity": "the most direct robotics exposure in the starter set",
+      "notes_concentration": "hardware and geography concentration can increase cyclicality",
+      "preferred_company_aliases": ["ABB", "Fanuc", "Keyence", "Intuitive Surgical"],
+      "overlap_aliases": ["ABB", "Fanuc", "Keyence", "Intuitive Surgical", "Yaskawa"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "RBOT",
+      "name": "Automation Leaders ETF",
+      "issuer": "Starter Research",
+      "summary": "Balanced automation implementation across software, robotics, and components.",
+      "theme_tags": ["automation", "industrial software"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Rockwell Automation", "symbol": "ROK.US", "weight": 5.0, "tags": ["controls"]},
+          {"name": "Siemens", "symbol": "SIE.DE", "weight": 4.9, "tags": ["industrial software"]},
+          {"name": "Schneider Electric", "symbol": "SU.PA", "weight": 4.6, "tags": ["controls"]},
+          {"name": "ABB", "symbol": "ABBN.SW", "weight": 4.4, "tags": ["industrial"]},
+          {"name": "Fanuc", "symbol": "6954.T", "weight": 4.0, "tags": ["robotics"]}
+        ],
+        "holdings_count": 58,
+        "ter_pct": 0.40,
+        "aum_usd_millions": 1550,
+        "volatility_3y_pct": 17.5,
+        "methodology_summary": "Multi-segment automation basket blending robotics hardware with factory software and controls.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "RBOT.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 70,
+      "concentration_risk": 40,
+      "volatility_risk": 52,
+      "growth_tilt": 44,
+      "infrastructure_tilt": 58,
+      "notes_purity": "less pure than robotics-only sleeves, but still strongly aligned",
+      "notes_concentration": "broader industrial mix can make it easier to hold at scale",
+      "preferred_company_aliases": ["Rockwell Automation", "Siemens", "Schneider Electric", "ABB"],
+      "overlap_aliases": ["Rockwell Automation", "Siemens", "Schneider Electric", "ABB", "Fanuc"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "AUTO",
+      "name": "Industrial Digitisation ETF",
+      "issuer": "Starter Research",
+      "summary": "Broader industrial digitisation basket with lower thematic purity but steadier implementation characteristics.",
+      "theme_tags": ["automation", "industrial digitisation"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Siemens", "symbol": "SIE.DE", "weight": 4.8, "tags": ["industrial software"]},
+          {"name": "Schneider Electric", "symbol": "SU.PA", "weight": 4.5, "tags": ["controls"]},
+          {"name": "Honeywell", "symbol": "HON.US", "weight": 4.3, "tags": ["industrial"]},
+          {"name": "Emerson", "symbol": "EMR.US", "weight": 4.0, "tags": ["controls"]},
+          {"name": "Rockwell Automation", "symbol": "ROK.US", "weight": 3.9, "tags": ["controls"]}
+        ],
+        "holdings_count": 86,
+        "ter_pct": 0.32,
+        "aum_usd_millions": 2450,
+        "volatility_3y_pct": 14.5,
+        "methodology_summary": "Broad industrial digitisation and automation basket spanning software, controls, and services.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "AUTO.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 56,
+      "concentration_risk": 28,
+      "volatility_risk": 42,
+      "growth_tilt": 30,
+      "infrastructure_tilt": 52,
+      "notes_purity": "broader industrial automation expression rather than a pure robotics sleeve",
+      "notes_concentration": "the most stable implementation of the three",
+      "preferred_company_aliases": ["Siemens", "Schneider Electric", "Rockwell Automation"],
+      "overlap_aliases": ["Siemens", "Schneider Electric", "Honeywell", "Emerson", "Rockwell Automation"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

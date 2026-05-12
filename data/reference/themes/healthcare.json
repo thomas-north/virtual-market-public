@@ -1,0 +1,149 @@
+{
+  "theme_id": "healthcare",
+  "label": "Healthcare Innovation",
+  "summary": "Healthcare exposure spanning biotech, medtech, and platform businesses, with role-aware implementation trade-offs.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["healthcare", "biotech", "medtech", "genomics"],
+  "starter_stock_basket": {
+    "basket_id": "healthcare-innovation-basket",
+    "name": "Healthcare Innovation Equal-Weight Basket",
+    "summary": "Equal-weight basket of high-conviction medtech and precision-medicine names.",
+    "holdings": [
+      {"name": "Intuitive Surgical", "symbol": "ISRG.US", "weight": 20, "tags": ["robotics"]},
+      {"name": "DexCom", "symbol": "DXCM.US", "weight": 20, "tags": ["devices"]},
+      {"name": "Illumina", "symbol": "ILMN.US", "weight": 20, "tags": ["sequencing"]},
+      {"name": "Thermo Fisher", "symbol": "TMO.US", "weight": 20, "tags": ["tools"]},
+      {"name": "Stryker", "symbol": "SYK.US", "weight": 20, "tags": ["devices"]}
+    ],
+    "rebalancing_note": "Direct healthcare baskets can become binary around product cycles and clinical sentiment."
+  },
+  "candidates": [
+    {
+      "profile_id": "GNOM",
+      "name": "Genomics and Precision Medicine ETF",
+      "issuer": "Starter Research",
+      "summary": "Highest-purity biotech and genomics implementation with pronounced single-theme volatility.",
+      "theme_tags": ["genomics", "biotech"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Illumina", "symbol": "ILMN.US", "weight": 6.1, "tags": ["sequencing"]},
+          {"name": "DexCom", "symbol": "DXCM.US", "weight": 5.2, "tags": ["devices"]},
+          {"name": "Intuitive Surgical", "symbol": "ISRG.US", "weight": 5.0, "tags": ["robotics"]},
+          {"name": "Exact Sciences", "symbol": "EXAS.US", "weight": 4.5, "tags": ["diagnostics"]},
+          {"name": "Moderna", "symbol": "MRNA.US", "weight": 4.0, "tags": ["biotech"]}
+        ],
+        "holdings_count": 41,
+        "ter_pct": 0.55,
+        "aum_usd_millions": 260,
+        "volatility_3y_pct": 29.0,
+        "methodology_summary": "Focused precision medicine, tools, and therapeutics basket.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "GNOM.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "small",
+      "purity_score": 88,
+      "concentration_risk": 74,
+      "volatility_risk": 82,
+      "growth_tilt": 78,
+      "infrastructure_tilt": 18,
+      "notes_purity": "the most direct innovation exposure in the starter set",
+      "notes_concentration": "high biotech-style volatility makes this a specialist sleeve",
+      "preferred_company_aliases": ["Illumina", "DexCom", "Intuitive Surgical", "Moderna"],
+      "overlap_aliases": ["Illumina", "DexCom", "Intuitive Surgical", "Exact Sciences", "Moderna"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "MEDT",
+      "name": "Medical Technology Leaders ETF",
+      "issuer": "Starter Research",
+      "summary": "Balanced innovation implementation tilted toward durable device and tools franchises.",
+      "theme_tags": ["medtech", "healthcare innovation"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Intuitive Surgical", "symbol": "ISRG.US", "weight": 5.8, "tags": ["robotics"]},
+          {"name": "Stryker", "symbol": "SYK.US", "weight": 5.2, "tags": ["devices"]},
+          {"name": "DexCom", "symbol": "DXCM.US", "weight": 4.9, "tags": ["devices"]},
+          {"name": "Boston Scientific", "symbol": "BSX.US", "weight": 4.4, "tags": ["devices"]},
+          {"name": "Thermo Fisher", "symbol": "TMO.US", "weight": 4.1, "tags": ["tools"]}
+        ],
+        "holdings_count": 52,
+        "ter_pct": 0.42,
+        "aum_usd_millions": 910,
+        "volatility_3y_pct": 19.0,
+        "methodology_summary": "Healthcare innovation basket emphasizing profitable medtech and tools businesses.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "MEDT.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 72,
+      "concentration_risk": 44,
+      "volatility_risk": 56,
+      "growth_tilt": 56,
+      "infrastructure_tilt": 26,
+      "notes_purity": "less pure than genomics-only approaches",
+      "notes_concentration": "more balanced for a meaningful allocation",
+      "preferred_company_aliases": ["Intuitive Surgical", "Stryker", "DexCom", "Thermo Fisher"],
+      "overlap_aliases": ["Intuitive Surgical", "Stryker", "DexCom", "Boston Scientific", "Thermo Fisher"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "HEAL",
+      "name": "Global Healthcare Quality ETF",
+      "issuer": "Starter Research",
+      "summary": "Broader healthcare implementation with quality and balance-sheet bias.",
+      "theme_tags": ["healthcare", "quality"],
+      "facts": {
+        "top_holdings": [
+          {"name": "UnitedHealth", "symbol": "UNH.US", "weight": 4.9, "tags": ["services"]},
+          {"name": "Abbott", "symbol": "ABT.US", "weight": 4.7, "tags": ["devices"]},
+          {"name": "Intuitive Surgical", "symbol": "ISRG.US", "weight": 4.4, "tags": ["robotics"]},
+          {"name": "Novo Nordisk", "symbol": "NOVO-B.CO", "weight": 4.3, "tags": ["pharma"]},
+          {"name": "Thermo Fisher", "symbol": "TMO.US", "weight": 4.0, "tags": ["tools"]}
+        ],
+        "holdings_count": 88,
+        "ter_pct": 0.30,
+        "aum_usd_millions": 2300,
+        "volatility_3y_pct": 14.0,
+        "methodology_summary": "Broad healthcare basket spanning devices, services, and selected large-cap innovation leaders.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "HEAL.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 56,
+      "concentration_risk": 30,
+      "volatility_risk": 42,
+      "growth_tilt": 34,
+      "infrastructure_tilt": 18,
+      "notes_purity": "broad healthcare rather than a pure innovation expression",
+      "notes_concentration": "the easiest implementation for large or lower-risk allocations",
+      "preferred_company_aliases": ["Intuitive Surgical", "Thermo Fisher", "Novo Nordisk"],
+      "overlap_aliases": ["UnitedHealth", "Abbott", "Intuitive Surgical", "Novo Nordisk", "Thermo Fisher"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

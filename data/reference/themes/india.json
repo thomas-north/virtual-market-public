@@ -1,0 +1,149 @@
+{
+  "theme_id": "india",
+  "label": "India",
+  "summary": "India exposure spanning country-beta, domestic growth, and implementation trade-offs between purity and simplicity.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["india", "indian equities", "emerging markets india", "india growth"],
+  "starter_stock_basket": {
+    "basket_id": "india-large-cap-basket",
+    "name": "India Leaders Equal-Weight Basket",
+    "summary": "Equal-weight basket of widely held large-cap Indian compounders and financials.",
+    "holdings": [
+      {"name": "Reliance Industries", "symbol": "RELIANCE.NS", "weight": 20, "tags": ["conglomerate"]},
+      {"name": "HDFC Bank", "symbol": "HDFCBANK.NS", "weight": 20, "tags": ["financials"]},
+      {"name": "Infosys", "symbol": "INFY.NS", "weight": 20, "tags": ["IT services"]},
+      {"name": "ICICI Bank", "symbol": "ICICIBANK.NS", "weight": 20, "tags": ["financials"]},
+      {"name": "Bharti Airtel", "symbol": "BHARTIARTL.NS", "weight": 20, "tags": ["telecom"]}
+    ],
+    "rebalancing_note": "Country baskets add operational friction, FX complexity, and more single-market concentration."
+  },
+  "candidates": [
+    {
+      "profile_id": "IIND",
+      "name": "India Growth UCITS ETF",
+      "issuer": "Starter Research",
+      "summary": "Concentrated India growth implementation tilted toward domestic compounders and financials.",
+      "theme_tags": ["india", "domestic growth"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Reliance Industries", "symbol": "RELIANCE.NS", "weight": 7.2, "tags": ["conglomerate"]},
+          {"name": "HDFC Bank", "symbol": "HDFCBANK.NS", "weight": 6.8, "tags": ["financials"]},
+          {"name": "Infosys", "symbol": "INFY.NS", "weight": 5.5, "tags": ["IT services"]},
+          {"name": "ICICI Bank", "symbol": "ICICIBANK.NS", "weight": 5.2, "tags": ["financials"]},
+          {"name": "Bharti Airtel", "symbol": "BHARTIARTL.NS", "weight": 4.6, "tags": ["telecom"]}
+        ],
+        "holdings_count": 38,
+        "ter_pct": 0.55,
+        "aum_usd_millions": 450,
+        "volatility_3y_pct": 24.0,
+        "methodology_summary": "India-focused basket tilted toward domestic leaders and compounding franchises.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "IIND.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "small",
+      "purity_score": 86,
+      "concentration_risk": 66,
+      "volatility_risk": 68,
+      "growth_tilt": 72,
+      "infrastructure_tilt": 18,
+      "notes_purity": "a relatively direct India domestic-growth implementation",
+      "notes_concentration": "country and sector concentration are still meaningful",
+      "preferred_company_aliases": ["Reliance Industries", "HDFC Bank", "Infosys", "ICICI Bank", "Bharti Airtel"],
+      "overlap_aliases": ["Reliance Industries", "HDFC Bank", "Infosys", "ICICI Bank", "Bharti Airtel"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "NDIA",
+      "name": "India Quality ETF",
+      "issuer": "Starter Research",
+      "summary": "Balanced India implementation with a quality tilt and broader sector diversification.",
+      "theme_tags": ["india", "quality"],
+      "facts": {
+        "top_holdings": [
+          {"name": "HDFC Bank", "symbol": "HDFCBANK.NS", "weight": 6.0, "tags": ["financials"]},
+          {"name": "Reliance Industries", "symbol": "RELIANCE.NS", "weight": 5.7, "tags": ["conglomerate"]},
+          {"name": "Infosys", "symbol": "INFY.NS", "weight": 5.1, "tags": ["IT services"]},
+          {"name": "TCS", "symbol": "TCS.NS", "weight": 4.8, "tags": ["IT services"]},
+          {"name": "Sun Pharma", "symbol": "SUNPHARMA.NS", "weight": 4.2, "tags": ["pharma"]}
+        ],
+        "holdings_count": 57,
+        "ter_pct": 0.35,
+        "aum_usd_millions": 1650,
+        "volatility_3y_pct": 18.0,
+        "methodology_summary": "Broader India basket tilted toward quality and liquidity screens.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "NDIA.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 72,
+      "concentration_risk": 44,
+      "volatility_risk": 54,
+      "growth_tilt": 58,
+      "infrastructure_tilt": 16,
+      "notes_purity": "still directly tied to India, but with more breadth and implementation quality",
+      "notes_concentration": "more balanced for meaningful allocations",
+      "preferred_company_aliases": ["HDFC Bank", "Reliance Industries", "Infosys", "TCS"],
+      "overlap_aliases": ["HDFC Bank", "Reliance Industries", "Infosys", "TCS", "Sun Pharma"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "EMIN",
+      "name": "India Blend All-Cap ETF",
+      "issuer": "Starter Research",
+      "summary": "Broader all-cap India implementation with more sector breadth and somewhat lower purity.",
+      "theme_tags": ["india", "all-cap"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Reliance Industries", "symbol": "RELIANCE.NS", "weight": 4.7, "tags": ["conglomerate"]},
+          {"name": "HDFC Bank", "symbol": "HDFCBANK.NS", "weight": 4.5, "tags": ["financials"]},
+          {"name": "ICICI Bank", "symbol": "ICICIBANK.NS", "weight": 4.3, "tags": ["financials"]},
+          {"name": "Infosys", "symbol": "INFY.NS", "weight": 4.1, "tags": ["IT services"]},
+          {"name": "Larsen & Toubro", "symbol": "LT.NS", "weight": 3.8, "tags": ["industrials"]}
+        ],
+        "holdings_count": 92,
+        "ter_pct": 0.25,
+        "aum_usd_millions": 3200,
+        "volatility_3y_pct": 17.0,
+        "methodology_summary": "Broad India all-cap basket designed for simpler country allocation exposure.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "EMIN.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 60,
+      "concentration_risk": 34,
+      "volatility_risk": 46,
+      "growth_tilt": 46,
+      "infrastructure_tilt": 18,
+      "notes_purity": "less selective, but still a clean country-level implementation",
+      "notes_concentration": "the easiest and broadest way to size India exposure",
+      "preferred_company_aliases": ["Reliance Industries", "HDFC Bank", "Infosys"],
+      "overlap_aliases": ["Reliance Industries", "HDFC Bank", "ICICI Bank", "Infosys", "Larsen & Toubro"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

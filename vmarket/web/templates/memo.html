@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Daily Memo</div>
+    <h2>{{ memo.title or "No memo yet" }}</h2>
+    {% if memo.updated_at %}
+    <p class="meta">Generated {{ memo.updated_at[:19].replace("T", " ") }}</p>
+    {% endif %}
+  </div>
+  <form method="post" action="/memo/generate" id="memo-gen-form">
+    <button type="submit" id="memo-gen-btn">Generate memo</button>
+  </form>
+</section>
+<script>
+  document.getElementById('memo-gen-form').addEventListener('submit', function () {
+    var btn = document.getElementById('memo-gen-btn');
+    btn.disabled = true;
+    btn.textContent = 'Generating…';
+  });
+</script>
+
+{% if full_text %}
+<section class="panel">
+  <pre style="white-space:pre-wrap;word-break:break-word;font-size:0.85rem;line-height:1.6">{{ full_text }}</pre>
+</section>
+{% else %}
+<section class="panel">
+  <p>No daily memo found. Click <strong>Generate memo</strong> to create one, or run <code>.venv/bin/vmarket report memo --output reports/daily_$(date +%F).md</code> from the terminal.</p>
+</section>
+{% endif %}
+
+{% endblock %}

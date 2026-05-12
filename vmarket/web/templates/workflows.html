@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Task workspace</div>
+    <h2>Choose a workflow, keep the context, and move toward a staged decision</h2>
+    <p>The cockpit now organizes work by repeatable portfolio tasks rather than isolated tools.</p>
+  </div>
+</section>
+
+<section class="grid two">
+  {% for workflow in payload.workflow_cards %}
+  <article class="panel">
+    <h3>{{ workflow.title }}</h3>
+    <p>{{ workflow.summary }}</p>
+    <p class="meta monospace">{{ workflow.primary_command }}</p>
+    <p><a href="{{ workflow.route }}">Open workflow</a></p>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="grid two">
+  <article class="panel">
+    <h3>Recent workflow sessions</h3>
+    <ul class="list">
+      {% for session in payload.recent_sessions %}
+      <li>
+        <strong>{{ session.title }}</strong>
+        <div class="meta">
+          {{ session.workflow }} · {{ session.updated_at.strftime("%Y-%m-%d %H:%M") }}
+          {% if session.latest_exported_at %}· exported{% endif %}
+        </div>
+        {% if session.workflow == "thematic-analysis" %}
+        <div><a href="/themes?session_id={{ session.id }}">Reopen session</a></div>
+        {% elif session.workflow == "portfolio-consultation" %}
+        <div><a href="/consult?session_id={{ session.id }}">Reopen session</a></div>
+        {% elif session.workflow == "research-follow-up" %}
+        <div><a href="/research?session_id={{ session.id }}">Reopen session</a></div>
+        {% elif session.workflow == "onboarding-import" %}
+        <div><a href="/onboarding">Reopen onboarding</a></div>
+        {% else %}
+        <div><a href="/agent?session_id={{ session.id }}">Open handoff</a></div>
+        {% endif %}
+      </li>
+      {% else %}
+      <li>No saved workflow sessions yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+  <article class="panel">
+    <h3>Recent decision notes</h3>
+    <ul class="list">
+      {% for entry in payload.recent_journal_entries %}
+      <li>
+        <strong>{{ entry.title }}</strong>
+        <div class="meta">{{ entry.summary }}</div>
+      </li>
+      {% else %}
+      <li>No decision notes saved yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

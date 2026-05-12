@@ -20,8 +20,6 @@ from vmarket.services.freshness import (
 
 STALE_DAYS = STALE_PRICE_DAYS
 
-_APPROXIMATE_IMPORT_NOTE = "Approximate value-snapshot import"
-
 
 def _infer_price_currency(symbol: str) -> str | None:
     symbol = symbol.upper()
@@ -83,30 +81,8 @@ def compute_positions(session: Session, base_currency: str | None = None) -> lis
         qty = Decimal("0")
         cost_total = Decimal("0")
         currency = trades[0].currency.upper()
-        provenance_kinds: list[str] = []
-        provenance_confidences: list[float] = []
-        provenance_notes: list[str] = []
 
         for t in trades:
-            provenance_kind = (t.provenance_kind or "").strip().lower()
-            if not provenance_kind:
-                provenance_kind = (
-                    "approximate_snapshot"
-                    if t.notes and _APPROXIMATE_IMPORT_NOTE in t.notes
-                    else "exact"
-                )
-            provenance_kinds.append(provenance_kind)
-            if t.provenance_confidence is not None:
-                provenance_confidences.append(float(t.provenance_confidence))
-            else:
-                provenance_confidences.append(
-                    0.5 if provenance_kind == "approximate_snapshot" else 1.0
-                )
-            if t.provenance_note:
-                provenance_notes.append(t.provenance_note)
-            elif provenance_kind == "approximate_snapshot" and t.notes:
-                provenance_notes.append(_APPROXIMATE_IMPORT_NOTE)
-
             if t.side == "buy":
                 qty += t.quantity
                 cost_total += t.quantity * t.price
@@ -194,28 +170,6 @@ def compute_positions(session: Session, base_currency: str | None = None) -> lis
         fx_stale = fx_status == FxState.STALE
         fx_missing = fx_missing or fx_status == FxState.MISSING
 
-        if provenance_kinds and all(kind == "exact" for kind in provenance_kinds):
-            holding_provenance_kind = "exact"
-            provenance_confidence = 1.0
-        elif provenance_kinds and all(kind == "approximate_snapshot" for kind in provenance_kinds):
-            holding_provenance_kind = "approximate_snapshot"
-            provenance_confidence = min(provenance_confidences) if provenance_confidences else 0.5
-        elif provenance_kinds:
-            holding_provenance_kind = "mixed"
-            provenance_confidence = min(provenance_confidences) if provenance_confidences else 0.75
-        else:
-            holding_provenance_kind = "exact"
-            provenance_confidence = 1.0
-
-        if holding_provenance_kind == "approximate_snapshot":
-            provenance_note = _APPROXIMATE_IMPORT_NOTE
-        elif holding_provenance_kind == "mixed":
-            provenance_note = "Mixed trade provenance"
-        else:
-            provenance_note = "Exact unit-based position"
-        if provenance_notes and holding_provenance_kind != "exact":
-            provenance_note = provenance_notes[0]
-
         positions.append(
             PositionDTO(
                 symbol=instrument.symbol,
@@ -234,9 +188,6 @@ def compute_positions(session: Session, base_currency: str | None = None) -> lis
                 price_status=price_status.state.value,
                 price_status_note=price_status.note,
                 fx_status=fx_status.value,
-                provenance_kind=holding_provenance_kind,
-                provenance_confidence=provenance_confidence,
-                provenance_note=provenance_note,
                 stale=price_status.state == PriceState.STALE,
                 fx_missing=fx_missing,
                 fx_stale=fx_stale,

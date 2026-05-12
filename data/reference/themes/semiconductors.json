@@ -1,0 +1,150 @@
+{
+  "theme_id": "semiconductors",
+  "label": "Semiconductors",
+  "summary": "Semiconductor exposure with explicit trade-offs between purity, cyclicality, and implementation quality.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["semiconductors", "chips", "chipmakers", "semis"],
+  "starter_stock_basket": {
+    "basket_id": "semiconductors-equal-weight-basket",
+    "name": "Semiconductor Leaders Equal-Weight Basket",
+    "summary": "Equal-weight basket of leading semiconductor designers, foundries, and equipment suppliers.",
+    "holdings": [
+      {"name": "NVIDIA", "symbol": "NVDA.US", "weight": 20, "tags": ["design"]},
+      {"name": "TSMC", "symbol": "2330.TW", "weight": 20, "tags": ["foundry"]},
+      {"name": "ASML", "symbol": "ASML.AS", "weight": 20, "tags": ["equipment"]},
+      {"name": "AMD", "symbol": "AMD.US", "weight": 20, "tags": ["design"]},
+      {"name": "Broadcom", "symbol": "AVGO.US", "weight": 20, "tags": ["infrastructure"]}
+    ],
+    "rebalancing_note": "Direct chip baskets are cyclically powerful but harder to size in large allocations."
+  },
+  "candidates": [
+    {
+      "profile_id": "CHIP",
+      "name": "Semiconductor Pure-Play ETF",
+      "issuer": "Starter Research",
+      "summary": "Highest-purity chip exposure with meaningful cyclicality and concentration.",
+      "theme_tags": ["semiconductors", "chip design", "manufacturing"],
+      "facts": {
+        "top_holdings": [
+          {"name": "NVIDIA", "symbol": "NVDA.US", "weight": 8.2, "tags": ["design"]},
+          {"name": "TSMC", "symbol": "2330.TW", "weight": 7.5, "tags": ["foundry"]},
+          {"name": "ASML", "symbol": "ASML.AS", "weight": 6.8, "tags": ["equipment"]},
+          {"name": "AMD", "symbol": "AMD.US", "weight": 5.5, "tags": ["design"]},
+          {"name": "Broadcom", "symbol": "AVGO.US", "weight": 5.2, "tags": ["infrastructure"]}
+        ],
+        "holdings_count": 33,
+        "ter_pct": 0.48,
+        "aum_usd_millions": 870,
+        "volatility_3y_pct": 28.0,
+        "methodology_summary": "Focused semiconductor design and manufacturing basket.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "CHIP.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 90,
+      "concentration_risk": 72,
+      "volatility_risk": 76,
+      "growth_tilt": 88,
+      "infrastructure_tilt": 34,
+      "notes_purity": "the most direct semiconductor expression",
+      "notes_concentration": "high cyclicality and concentrated mega-cap exposure",
+      "preferred_company_aliases": ["NVIDIA", "TSMC", "ASML", "AMD", "Broadcom"],
+      "overlap_aliases": ["NVIDIA", "TSMC", "ASML", "AMD", "Broadcom"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "SEMI",
+      "name": "Semiconductor Quality ETF",
+      "issuer": "Starter Research",
+      "summary": "Balanced semi exposure with quality and liquidity bias, suited to larger allocations.",
+      "theme_tags": ["semiconductors", "quality"],
+      "facts": {
+        "top_holdings": [
+          {"name": "TSMC", "symbol": "2330.TW", "weight": 6.5, "tags": ["foundry"]},
+          {"name": "Broadcom", "symbol": "AVGO.US", "weight": 6.0, "tags": ["infrastructure"]},
+          {"name": "ASML", "symbol": "ASML.AS", "weight": 5.9, "tags": ["equipment"]},
+          {"name": "Texas Instruments", "symbol": "TXN.US", "weight": 4.9, "tags": ["analog"]},
+          {"name": "Applied Materials", "symbol": "AMAT.US", "weight": 4.5, "tags": ["equipment"]}
+        ],
+        "holdings_count": 49,
+        "ter_pct": 0.35,
+        "aum_usd_millions": 2100,
+        "volatility_3y_pct": 19.5,
+        "methodology_summary": "Semiconductor and equipment basket tilted toward scale, liquidity, and balance-sheet quality.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "SEMI.L", "currency": "GBP", "exchange": "LSE", "is_primary": true},
+          {"symbol": "SEMI.US", "currency": "USD", "exchange": "NYSE", "is_primary": false}
+        ],
+        "listing_currencies": ["GBP", "USD"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 74,
+      "concentration_risk": 42,
+      "volatility_risk": 54,
+      "growth_tilt": 58,
+      "infrastructure_tilt": 44,
+      "notes_purity": "still clearly semiconductor exposure, but less aggressive than pure-play sleeves",
+      "notes_concentration": "better suited to larger or lower-volatility allocations",
+      "preferred_company_aliases": ["TSMC", "Broadcom", "ASML", "Texas Instruments"],
+      "overlap_aliases": ["TSMC", "Broadcom", "ASML", "Texas Instruments", "Applied Materials"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "SILI",
+      "name": "Global Silicon and Compute ETF",
+      "issuer": "Starter Research",
+      "summary": "Broad compute supply-chain basket with less purity but more diversified geography and business models.",
+      "theme_tags": ["semiconductors", "compute"],
+      "facts": {
+        "top_holdings": [
+          {"name": "ARM", "symbol": "ARM.US", "weight": 4.9, "tags": ["IP"]},
+          {"name": "Synopsys", "symbol": "SNPS.US", "weight": 4.6, "tags": ["EDA"]},
+          {"name": "ASML", "symbol": "ASML.AS", "weight": 4.5, "tags": ["equipment"]},
+          {"name": "TSMC", "symbol": "2330.TW", "weight": 4.4, "tags": ["foundry"]},
+          {"name": "NVIDIA", "symbol": "NVDA.US", "weight": 4.2, "tags": ["design"]}
+        ],
+        "holdings_count": 76,
+        "ter_pct": 0.28,
+        "aum_usd_millions": 3100,
+        "volatility_3y_pct": 17.0,
+        "methodology_summary": "Broad compute and semiconductor supply-chain implementation spanning chips, equipment, and IP.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "SILI.US", "currency": "USD", "exchange": "NASDAQ", "is_primary": true}
+        ],
+        "listing_currencies": ["USD"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "large",
+      "purity_score": 60,
+      "concentration_risk": 32,
+      "volatility_risk": 46,
+      "growth_tilt": 42,
+      "infrastructure_tilt": 36,
+      "notes_purity": "broader compute supply-chain expression, not a pure chip sleeve",
+      "notes_concentration": "diversification is better, but UK investors may prefer a GBP-listed alternative",
+      "preferred_company_aliases": ["ARM", "Synopsys", "ASML", "TSMC", "NVIDIA"],
+      "overlap_aliases": ["ARM", "Synopsys", "ASML", "TSMC", "NVIDIA"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

@@ -4,20 +4,12 @@ from datetime import date, timedelta
 from decimal import Decimal
 
 import typer
-from typer import Context
 
 from vmarket.cli.common import abort, console, format_decimal, simple_table, success, warning
 from vmarket.db import get_session
 from vmarket.errors import VMarketError
 
-portfolio_app = typer.Typer(help="Inspect and trade the portfolio.", invoke_without_command=True)
-
-
-@portfolio_app.callback()
-def portfolio_root(ctx: Context) -> None:
-    """Default to showing the portfolio when no subcommand is provided."""
-    if ctx.invoked_subcommand is None:
-        portfolio_show()
+portfolio_app = typer.Typer(help="Inspect and trade the portfolio.")
 
 
 @portfolio_app.command("show")

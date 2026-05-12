@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Onboarding</div>
+    <h2>Set up a private local portfolio workspace</h2>
+    <p>Portfolio and watchlist data live in <code>{{ state.user_data_dir }}</code>, which is ignored by git.</p>
+  </div>
+</section>
+
+<div class="tab-bar">
+  <a href="#setup" class="tab-link">Setup</a>
+  <a href="#import" class="tab-link">Import</a>
+  <a href="#profile" class="tab-link">Profile</a>
+  <a href="#drafts" class="tab-link">Drafts{% if state.pending_imports %} <span class="badge">{{ state.pending_imports }}</span>{% endif %}</a>
+</div>
+
+<!-- Setup tab (default) -->
+<div id="setup" class="tab-panel">
+  <section class="panel">
+    <h3>Setup checklist</h3>
+    <ul class="list">
+      <li>Cash: {{ "ready" if state.cash_ready else "not set" }}</li>
+      <li>Portfolio: {{ "ready" if state.portfolio_ready else "not imported" }}</li>
+      <li>Watchlist: {{ "ready" if state.watchlist_ready else "not imported" }}</li>
+      <li>Consultant profile: {{ "ready" if state.profile_ready else "missing risk score" }}</li>
+    </ul>
+    <p class="meta">Database: {{ state.db_path }}</p>
+  </section>
+</div>
+
+<!-- Import tab -->
+<div id="import" class="tab-panel">
+  <section class="panel">
+    <h3>Manual portfolio row</h3>
+    <p class="meta">Use quantity and average cost when available. If units are unavailable, provide current value plus cost basis, gain amount, or gain percent for an approximate snapshot import.</p>
+    <form method="post" action="/imports/portfolio/manual" class="form-grid">
+      <label>Symbol <input type="text" name="symbol" placeholder="AAPL.US"></label>
+      <label>Name <input type="text" name="name" placeholder="Apple Inc"></label>
+      <label>Quantity <input type="text" name="quantity" placeholder="5"></label>
+      <label>Average cost <input type="text" name="average_cost" placeholder="180"></label>
+      <label>Cost basis <input type="text" name="cost_basis" placeholder="optional total book cost"></label>
+      <label>Current value <input type="text" name="current_value" placeholder="optional total value"></label>
+      <label>Gain amount <input type="text" name="gain_amount" placeholder="optional total gain/loss"></label>
+      <label>Gain percent <input type="text" name="gain_percent" placeholder="optional"></label>
+      <label>Currency <input type="text" name="currency" placeholder="USD"></label>
+      <label>Asset type <input type="text" name="asset_type" placeholder="stock"></label>
+      <label>Current price <input type="text" name="current_price" placeholder="optional"></label>
+      <label class="wide">Notes <textarea name="notes" rows="2"></textarea></label>
+      <div class="wide"><button type="submit">Create portfolio draft</button></div>
+    </form>
+  </section>
+
+  <details class="advanced wide">
+    <summary>Advanced imports</summary>
+    <div class="grid two">
+      <section class="panel">
+        <h3>CSV or pasted portfolio</h3>
+        <form method="post" action="/imports/portfolio/csv" enctype="multipart/form-data" class="form-grid">
+          <label class="wide">Portfolio CSV <input type="file" name="file" accept=".csv,text/csv"></label>
+          <div class="wide"><button type="submit">Upload portfolio CSV</button></div>
+        </form>
+        <form method="post" action="/imports/portfolio/paste" class="form-grid">
+          <label class="wide">Paste holdings
+            <textarea name="content" rows="6" placeholder="symbol,quantity,average_cost,currency,name OR symbol,current_value,gain_amount,currency,name"></textarea>
+          </label>
+          <div class="wide"><button type="submit">Create pasted draft</button></div>
+        </form>
+        <form method="post" action="/imports/watchlist/csv" enctype="multipart/form-data" class="form-grid">
+          <label class="wide">Watchlist CSV <input type="file" name="file" accept=".csv,text/csv"></label>
+          <div class="wide"><button type="submit">Upload watchlist CSV</button></div>
+        </form>
+      </section>
+      <section class="panel">
+        <h3>Agent-assisted screenshot import</h3>
+        <p>Upload a screenshot, then hand the generated packet to Codex, Claude Code, or OpenClaw for extraction into a reviewable draft.</p>
+        <form method="post" action="/imports/screenshot" enctype="multipart/form-data" class="form-grid">
+          <label class="wide">Screenshot
+            <input type="file" name="file" accept="image/*">
+          </label>
+          <div class="wide"><button type="submit">Store screenshot draft</button></div>
+        </form>
+        <p><a href="/agent/prompt/onboarding-import.md">Open onboarding agent packet</a></p>
+      </section>
+    </div>
+  </details>
+</div>
+
+<!-- Profile tab -->
+<div id="profile" class="tab-panel">
+  <section class="panel">
+    <h3>Consultant profile</h3>
+    <form method="post" action="/onboarding/profile" class="form-grid">
+      <label>Risk score
+        <input type="text" name="risk_score" value="{{ saved_profile.risk_score or '' }}" placeholder="1-7">
+      </label>
+      <label>Jurisdiction
+        <input type="text" name="country_jurisdiction" value="{{ saved_profile.country_jurisdiction or 'UK' }}">
+      </label>
+      <label>Base currency
+        <input type="text" name="base_currency" value="{{ saved_profile.base_currency or 'GBP' }}">
+      </label>
+      <label>Income preference
+        <input type="text" name="income_preference" value="{{ saved_profile.income_preference or '' }}" placeholder="growth, income, mixed">
+      </label>
+      <label class="wide">Exclusions
+        <textarea name="exclusions" rows="2" placeholder="defence, crypto">{{ saved_profile.exclusions|join(", ") }}</textarea>
+      </label>
+      <label class="wide">Preferences
+        <textarea name="preferences" rows="2" placeholder="UK-listed, accumulating funds">{{ saved_profile.preference_tags|join(", ") }}</textarea>
+      </label>
+      <label class="wide">Product preferences
+        <textarea name="product_preferences" rows="2" placeholder="ETF, investment trust">{{ saved_profile.product_preferences|join(", ") }}</textarea>
+      </label>
+      <label><input type="checkbox" name="prefers_uk_listed" {% if saved_profile.prefers_uk_listed %}checked{% endif %}> Prefer UK-listed lines</label>
+      <label><input type="checkbox" name="prefers_gbp_lines" {% if saved_profile.prefers_gbp_lines %}checked{% endif %}> Prefer GBP lines</label>
+      <div class="wide"><button type="submit">Save profile</button></div>
+    </form>
+  </section>
+</div>
+
+<!-- Drafts tab -->
+<div id="drafts" class="tab-panel">
+  <section class="panel">
+    <h3>Import drafts</h3>
+    <ul class="list">
+      {% for draft in drafts %}
+      <li>
+        <strong><a href="/imports/{{ draft.id }}">Draft #{{ draft.id }}</a></strong>
+        <span class="meta">{{ draft.kind }} · {{ draft.source_kind }} · {{ draft.status }} · {{ draft.row_count }} rows · {{ draft.warning_count }} warnings</span>
+      </li>
+      {% else %}
+      <li>No import drafts yet.</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+
+{% endblock %}

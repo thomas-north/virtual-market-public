@@ -1,0 +1,149 @@
+{
+  "theme_id": "defence",
+  "label": "Defence",
+  "summary": "Defence and security exposure with attention to concentration, policy sensitivity, and implementation breadth.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["defence", "defense", "aerospace", "security"],
+  "starter_stock_basket": {
+    "basket_id": "defence-core-basket",
+    "name": "Defence Prime Contractors Basket",
+    "summary": "Equal-weight basket of defence primes and strategic security platforms.",
+    "holdings": [
+      {"name": "RTX", "symbol": "RTX.US", "weight": 20, "tags": ["aerospace"]},
+      {"name": "Northrop Grumman", "symbol": "NOC.US", "weight": 20, "tags": ["systems"]},
+      {"name": "Lockheed Martin", "symbol": "LMT.US", "weight": 20, "tags": ["prime contractor"]},
+      {"name": "BAE Systems", "symbol": "BA.L", "weight": 20, "tags": ["prime contractor"]},
+      {"name": "Palantir", "symbol": "PLTR.US", "weight": 20, "tags": ["software"]}
+    ],
+    "rebalancing_note": "Direct contractor baskets are conviction-heavy and policy-sensitive."
+  },
+  "candidates": [
+    {
+      "profile_id": "DFNS",
+      "name": "Defence Focus UCITS ETF",
+      "issuer": "Starter Research",
+      "summary": "Pure-play defence and military systems sleeve with heavier contractor concentration.",
+      "theme_tags": ["defence", "military systems"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Palantir", "symbol": "PLTR.US", "weight": 6.0, "tags": ["software"]},
+          {"name": "RTX", "symbol": "RTX.US", "weight": 5.8, "tags": ["aerospace"]},
+          {"name": "Northrop Grumman", "symbol": "NOC.US", "weight": 5.5, "tags": ["systems"]},
+          {"name": "Lockheed Martin", "symbol": "LMT.US", "weight": 5.3, "tags": ["prime contractor"]},
+          {"name": "BAE Systems", "symbol": "BA.L", "weight": 4.8, "tags": ["prime contractor"]}
+        ],
+        "holdings_count": 35,
+        "ter_pct": 0.55,
+        "aum_usd_millions": 180,
+        "volatility_3y_pct": 24.5,
+        "methodology_summary": "Focused basket of defence primes and military systems manufacturers.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "DFNS.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "small",
+      "purity_score": 90,
+      "concentration_risk": 70,
+      "volatility_risk": 70,
+      "growth_tilt": 52,
+      "infrastructure_tilt": 78,
+      "notes_purity": "the most direct defence exposure in the starter universe",
+      "notes_concentration": "policy, procurement, and contractor concentration make this a riskier sleeve",
+      "preferred_company_aliases": ["Lockheed Martin", "Northrop Grumman", "Palantir", "BAE Systems"],
+      "overlap_aliases": ["Palantir", "RTX", "Northrop Grumman", "Lockheed Martin", "BAE Systems"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "NATO",
+      "name": "Strategic Security Leaders ETF",
+      "issuer": "Starter Research",
+      "summary": "Balanced security and defence basket that blends contractors with industrial and electronics suppliers.",
+      "theme_tags": ["defence", "industrial security"],
+      "facts": {
+        "top_holdings": [
+          {"name": "RTX", "symbol": "RTX.US", "weight": 5.0, "tags": ["aerospace"]},
+          {"name": "Safran", "symbol": "SAF.PA", "weight": 4.8, "tags": ["systems"]},
+          {"name": "BAE Systems", "symbol": "BA.L", "weight": 4.5, "tags": ["prime contractor"]},
+          {"name": "Thales", "symbol": "HO.PA", "weight": 4.3, "tags": ["electronics"]},
+          {"name": "L3Harris", "symbol": "LHX.US", "weight": 4.1, "tags": ["communications"]}
+        ],
+        "holdings_count": 46,
+        "ter_pct": 0.45,
+        "aum_usd_millions": 620,
+        "volatility_3y_pct": 18.5,
+        "methodology_summary": "Broader basket of defence primes, aerospace suppliers, and security electronics names.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "NATO.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 74,
+      "concentration_risk": 45,
+      "volatility_risk": 55,
+      "growth_tilt": 40,
+      "infrastructure_tilt": 72,
+      "notes_purity": "less pure than contractor-only approaches",
+      "notes_concentration": "more balanced implementation with lower single-prime dependence",
+      "preferred_company_aliases": ["RTX", "BAE Systems", "Thales", "Safran"],
+      "overlap_aliases": ["RTX", "BAE Systems", "Thales", "Safran", "L3Harris"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "AERO",
+      "name": "Aerospace and Security Broad ETF",
+      "issuer": "Starter Research",
+      "summary": "Broader aerospace and security implementation with less pure defence exposure but better diversification.",
+      "theme_tags": ["aerospace", "security"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Boeing", "symbol": "BA.US", "weight": 4.9, "tags": ["aerospace"]},
+          {"name": "RTX", "symbol": "RTX.US", "weight": 4.6, "tags": ["systems"]},
+          {"name": "Airbus", "symbol": "AIR.PA", "weight": 4.5, "tags": ["aerospace"]},
+          {"name": "TransDigm", "symbol": "TDG.US", "weight": 4.2, "tags": ["components"]},
+          {"name": "Rolls-Royce", "symbol": "RR.L", "weight": 3.8, "tags": ["engines"]}
+        ],
+        "holdings_count": 64,
+        "ter_pct": 0.35,
+        "aum_usd_millions": 1700,
+        "volatility_3y_pct": 16.0,
+        "methodology_summary": "Wide aerospace, defence, and systems basket spanning primes, maintenance, and component suppliers.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "AERO.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 58,
+      "concentration_risk": 34,
+      "volatility_risk": 48,
+      "growth_tilt": 38,
+      "infrastructure_tilt": 60,
+      "notes_purity": "more aerospace than pure defence",
+      "notes_concentration": "broader and easier to size, but less thematic purity",
+      "preferred_company_aliases": ["RTX", "Airbus", "Rolls-Royce"],
+      "overlap_aliases": ["Boeing", "RTX", "Airbus", "TransDigm", "Rolls-Royce"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

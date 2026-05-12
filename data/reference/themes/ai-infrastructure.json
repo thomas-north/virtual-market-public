@@ -1,0 +1,149 @@
+{
+  "theme_id": "ai-infrastructure",
+  "label": "AI Infrastructure",
+  "summary": "AI infrastructure exposure across compute, networking, power, and tooling rather than consumer AI narratives.",
+  "refresh": {
+    "as_of": "2026-05-06",
+    "source_type": "manual_curated",
+    "notes": "Starter reference data only. Refresh with issuer material before using for live decisions."
+  },
+  "keywords": ["ai infrastructure", "ai", "compute", "networking", "datacentre"],
+  "starter_stock_basket": {
+    "basket_id": "ai-infrastructure-basket",
+    "name": "AI Infrastructure Equal-Weight Basket",
+    "summary": "Equal-weight basket across leading compute, networking, and power-enabler names.",
+    "holdings": [
+      {"name": "NVIDIA", "symbol": "NVDA.US", "weight": 20, "tags": ["compute"]},
+      {"name": "Broadcom", "symbol": "AVGO.US", "weight": 20, "tags": ["networking"]},
+      {"name": "Vertiv", "symbol": "VRT.US", "weight": 20, "tags": ["power"]},
+      {"name": "Arista Networks", "symbol": "ANET.US", "weight": 20, "tags": ["networking"]},
+      {"name": "TSMC", "symbol": "2330.TW", "weight": 20, "tags": ["foundry"]}
+    ],
+    "rebalancing_note": "Direct AI infrastructure baskets are powerful but can become expensive and momentum-heavy."
+  },
+  "candidates": [
+    {
+      "profile_id": "AINF",
+      "name": "AI Infrastructure Leaders ETF",
+      "issuer": "Starter Research",
+      "summary": "Focused AI infrastructure sleeve spanning accelerators, networking, and datacentre enablers.",
+      "theme_tags": ["ai infrastructure", "compute", "networking"],
+      "facts": {
+        "top_holdings": [
+          {"name": "NVIDIA", "symbol": "NVDA.US", "weight": 8.0, "tags": ["compute"]},
+          {"name": "Broadcom", "symbol": "AVGO.US", "weight": 6.1, "tags": ["networking"]},
+          {"name": "Arista Networks", "symbol": "ANET.US", "weight": 5.4, "tags": ["networking"]},
+          {"name": "Vertiv", "symbol": "VRT.US", "weight": 5.0, "tags": ["power"]},
+          {"name": "TSMC", "symbol": "2330.TW", "weight": 4.7, "tags": ["foundry"]}
+        ],
+        "holdings_count": 34,
+        "ter_pct": 0.55,
+        "aum_usd_millions": 350,
+        "volatility_3y_pct": 30.0,
+        "methodology_summary": "Concentrated infrastructure basket emphasising AI compute, networking, and power enablers.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "AINF.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "medium",
+      "aum_bucket": "small",
+      "purity_score": 90,
+      "concentration_risk": 76,
+      "volatility_risk": 80,
+      "growth_tilt": 86,
+      "infrastructure_tilt": 82,
+      "notes_purity": "the strongest direct alignment with AI infrastructure rather than broad AI marketing",
+      "notes_concentration": "very concentrated in a few expensive infrastructure leaders",
+      "preferred_company_aliases": ["NVIDIA", "Broadcom", "Arista Networks", "Vertiv", "TSMC"],
+      "overlap_aliases": ["NVIDIA", "Broadcom", "Arista Networks", "Vertiv", "TSMC"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "DTCN",
+      "name": "Digital Infrastructure Core ETF",
+      "issuer": "Starter Research",
+      "summary": "Broader digital infrastructure approach that blends AI enablers with networking, semis, and power systems.",
+      "theme_tags": ["ai infrastructure", "digital infrastructure"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Broadcom", "symbol": "AVGO.US", "weight": 5.8, "tags": ["networking"]},
+          {"name": "TSMC", "symbol": "2330.TW", "weight": 5.4, "tags": ["foundry"]},
+          {"name": "Schneider Electric", "symbol": "SU.PA", "weight": 4.8, "tags": ["power"]},
+          {"name": "Arista Networks", "symbol": "ANET.US", "weight": 4.6, "tags": ["networking"]},
+          {"name": "Vertiv", "symbol": "VRT.US", "weight": 4.1, "tags": ["power"]}
+        ],
+        "holdings_count": 55,
+        "ter_pct": 0.39,
+        "aum_usd_millions": 1250,
+        "volatility_3y_pct": 20.0,
+        "methodology_summary": "Balanced digital infrastructure basket spanning semis, networking, and datacentre power.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "DTCN.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "medium",
+      "purity_score": 74,
+      "concentration_risk": 48,
+      "volatility_risk": 58,
+      "growth_tilt": 62,
+      "infrastructure_tilt": 74,
+      "notes_purity": "still clearly tied to AI infrastructure, but less concentrated than a pure-play sleeve",
+      "notes_concentration": "more balanced for larger or more risk-aware allocations",
+      "preferred_company_aliases": ["Broadcom", "TSMC", "Schneider Electric", "Arista Networks", "Vertiv"],
+      "overlap_aliases": ["Broadcom", "TSMC", "Schneider Electric", "Arista Networks", "Vertiv"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    },
+    {
+      "profile_id": "GRID",
+      "name": "Power and Datacentre Systems ETF",
+      "issuer": "Starter Research",
+      "summary": "More utility-like implementation focused on power, cooling, electrical systems, and datacentre support.",
+      "theme_tags": ["ai infrastructure", "power", "datacentre"],
+      "facts": {
+        "top_holdings": [
+          {"name": "Vertiv", "symbol": "VRT.US", "weight": 5.5, "tags": ["power"]},
+          {"name": "Schneider Electric", "symbol": "SU.PA", "weight": 5.1, "tags": ["power"]},
+          {"name": "Eaton", "symbol": "ETN.US", "weight": 4.9, "tags": ["power"]},
+          {"name": "Trane", "symbol": "TT.US", "weight": 4.3, "tags": ["cooling"]},
+          {"name": "Johnson Controls", "symbol": "JCI.US", "weight": 3.9, "tags": ["systems"]}
+        ],
+        "holdings_count": 70,
+        "ter_pct": 0.33,
+        "aum_usd_millions": 1980,
+        "volatility_3y_pct": 15.0,
+        "methodology_summary": "Broader support-systems basket linked to power and cooling demand from datacentre build-out.",
+        "domicile": "Ireland",
+        "distribution_policy": "accumulating",
+        "listings": [
+          {"symbol": "GRID.L", "currency": "GBP", "exchange": "LSE", "is_primary": true}
+        ],
+        "listing_currencies": ["GBP"],
+        "source_notes": "Starter local reference facts."
+      },
+      "liquidity_bucket": "high",
+      "aum_bucket": "large",
+      "purity_score": 58,
+      "concentration_risk": 34,
+      "volatility_risk": 42,
+      "growth_tilt": 40,
+      "infrastructure_tilt": 84,
+      "notes_purity": "less direct AI exposure, but still highly relevant to datacentre build-out",
+      "notes_concentration": "the broadest and steadiest implementation in the starter set",
+      "preferred_company_aliases": ["Vertiv", "Schneider Electric", "Eaton"],
+      "overlap_aliases": ["Vertiv", "Schneider Electric", "Eaton", "Trane", "Johnson Controls"],
+      "status": "starter_reference",
+      "facts_last_reviewed": "2026-05-06"
+    }
+  ]
+}

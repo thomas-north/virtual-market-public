@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Portfolio consultant</div>
+    <h2>Diagnose the portfolio and surface research areas</h2>
+    <p>Stays portfolio-aware. Suggests research areas before making product-level claims.</p>
+  </div>
+  {% if current_session %}
+  <div class="pill">Session #{{ current_session.id }}</div>
+  {% endif %}
+</section>
+
+<!-- Form — collapsed to <details> when results are present -->
+{% if current_session %}
+<details class="advanced" style="margin-bottom:18px;border:1px solid var(--border);border-radius:14px;padding:14px 20px;">
+  <summary style="font-size:14px;color:var(--ink);font-weight:600;">Modify consultation settings</summary>
+  <div style="padding-top:14px;">
+{% else %}
+<section class="panel" style="margin-bottom:18px;">
+  <h3>Run consultation</h3>
+{% endif %}
+
+  <form method="post" action="/consult" class="form-grid">
+    <label>Risk score
+      <input type="text" name="risk_score" value="{{ form_values.risk_score or '' }}" placeholder="1–7">
+    </label>
+    <label>Amount available
+      <input type="text" name="amount" value="{{ form_values.amount or '' }}" placeholder="1800">
+    </label>
+    <label class="wide">Exclusions
+      <textarea name="exclusions" rows="2" placeholder="defence, crypto">{{ form_values.exclusions or '' }}</textarea>
+    </label>
+    <details class="advanced wide">
+      <summary>Advanced options</summary>
+      <div class="form-grid">
+        <label>Investment horizon
+          <input type="text" name="investment_horizon" value="{{ form_values.investment_horizon or '' }}" placeholder="long-term">
+        </label>
+        <label>Monthly amount
+          <input type="text" name="monthly_amount" value="{{ form_values.monthly_amount or '' }}" placeholder="200">
+        </label>
+        <label>Income preference
+          <input type="text" name="income_preference" value="{{ form_values.income_preference or '' }}" placeholder="growth, income, mixed">
+        </label>
+        <label>Distribution preference
+          <input type="text" name="distribution_preference" value="{{ form_values.distribution_preference or '' }}" placeholder="accumulating">
+        </label>
+        <label>Jurisdiction
+          <input type="text" name="country_jurisdiction" value="{{ form_values.country_jurisdiction or '' }}" placeholder="UK">
+        </label>
+        <label>Base currency
+          <input type="text" name="base_currency" value="{{ form_values.base_currency or '' }}" placeholder="GBP">
+        </label>
+        <label class="wide">Preferences
+          <textarea name="preferences" rows="2" placeholder="growth, uk listed">{{ form_values.preferences or '' }}</textarea>
+        </label>
+        <label class="wide">Product preferences
+          <textarea name="product_preferences" rows="2" placeholder="ETF, investment trust">{{ form_values.product_preferences or '' }}</textarea>
+        </label>
+        <label>Prefer UK-listed lines
+          <input type="checkbox" name="prefers_uk_listed" {% if form_values.prefers_uk_listed %}checked{% endif %}>
+        </label>
+        <label>Prefer GBP lines
+          <input type="checkbox" name="prefers_gbp_lines" {% if form_values.prefers_gbp_lines %}checked{% endif %}>
+        </label>
+        <label class="wide">Factsheet lookup
+          <input type="text" name="factsheet" value="{{ form_values.factsheet or '' }}" placeholder="VUKE">
+        </label>
+      </div>
+    </details>
+    <div class="wide">
+      <button type="submit">Run consultation</button>
+    </div>
+  </form>
+
+{% if current_session %}
+  </div>
+</details>
+{% else %}
+</section>
+{% endif %}
+
+{% if current_session %}
+<!-- Results phase -->
+<div class="phase-label">Results — session #{{ current_session.id }}</div>
+
+<div class="tab-bar">
+  <a href="#diagnosis" class="tab-link">Diagnosis</a>
+  <a href="#research-areas" class="tab-link">
+    Research areas
+    {% if diagnosis.research_ideas %}<span class="badge">{{ diagnosis.research_ideas|length }}</span>{% endif %}
+  </a>
+  {% if factsheet_summary %}
+  <a href="#factsheet" class="tab-link">Factsheet</a>
+  {% endif %}
+  <a href="#agent-handoff" class="tab-link">Agent handoff</a>
+</div>
+
+<!-- Diagnosis tab -->
+<div id="diagnosis" class="tab-panel">
+  <section class="grid two">
+    <article class="panel">
+      <h3>Saved profile</h3>
+      <p>Risk score: <strong>{{ saved_profile.risk_score or "unset" }}</strong></p>
+      <p class="meta">Exclusions: {{ saved_profile.exclusions|join(", ") or "none" }}</p>
+      <p class="meta">Product preferences: {{ saved_profile.product_preferences|join(", ") or "none" }}</p>
+    </article>
+    <article class="panel">
+      <h3>Watchlist intent</h3>
+      <ul class="list">
+        {% for signal in diagnosis.watchlist_signals %}
+        <li>{{ signal }}</li>
+        {% else %}
+        <li class="meta">No strong watchlist pattern detected yet.</li>
+        {% endfor %}
+      </ul>
+    </article>
+  </section>
+  <section class="grid two">
+    <article class="panel">
+      <h3>Concentration warnings</h3>
+      <ul class="list">
+        {% for warning in diagnosis.concentration_warnings %}
+        <li><strong>{{ warning.summary }}</strong> {{ warning.details }}</li>
+        {% else %}
+        <li class="meta">No major concentration warnings detected.</li>
+        {% endfor %}
+      </ul>
+    </article>
+    <article class="panel">
+      <h3>Portfolio gaps</h3>
+      <ul class="list">
+        {% for gap in diagnosis.gaps %}
+        <li><strong>{{ gap.summary }}</strong> {{ gap.rationale }}</li>
+        {% else %}
+        <li class="meta">No obvious gaps detected.</li>
+        {% endfor %}
+      </ul>
+    </article>
+  </section>
+  {% if diagnosis.follow_up_questions %}
+  <section class="panel">
+    <h3>Follow-up questions</h3>
+    <ul class="list">
+      {% for question in diagnosis.follow_up_questions %}
+      <li>{{ question }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+
+<!-- Research areas tab -->
+<div id="research-areas" class="tab-panel">
+  <section class="panel">
+    <h3>Research areas</h3>
+    <ul class="list">
+      {% for idea in diagnosis.research_ideas %}
+      <li style="padding:12px 0;border-bottom:1px solid var(--border);">
+        <strong>{{ idea.area }}</strong> — {{ idea.summary }}
+        <div class="meta" style="margin-top:4px;">{{ idea.why_now }}</div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <form method="post" action="/actions/stage" class="inline-form">
+            <input type="hidden" name="kind" value="save_research_note">
+            <input type="hidden" name="source" value="portfolio_consultation">
+            <input type="hidden" name="section" value="questions">
+            <input type="hidden" name="title" value="{{ idea.area }}">
+            <input type="hidden" name="body" value="{{ idea.summary }} {{ idea.why_now }}">
+            <input type="hidden" name="explanation" value="Stage consultant research idea.">
+            <input type="hidden" name="workflow" value="portfolio-consultation">
+            <input type="hidden" name="workflow_session_id" value="{{ current_session.id }}">
+            <input type="hidden" name="redirect_to" value="/consult?session_id={{ current_session.id }}">
+            <button type="submit">Stage research note</button>
+          </form>
+          {% if idea.candidate_identifiers %}
+          <a href="/research?symbol={{ idea.candidate_identifiers[0] }}" class="meta">Open research for {{ idea.candidate_identifiers[0] }} →</a>
+          {% endif %}
+        </div>
+      </li>
+      {% else %}
+      <li>No research ideas generated yet — run a consultation first.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <div class="sticky-actions">
+    <form method="post" action="/journal/save" class="inline-form">
+      <input type="hidden" name="workflow" value="portfolio-consultation">
+      <input type="hidden" name="workflow_session_id" value="{{ current_session.id }}">
+      <input type="hidden" name="title" value="Portfolio consultation">
+      <input type="hidden" name="summary" value="{{ diagnosis.research_ideas[0].summary if diagnosis.research_ideas else 'Portfolio consultation saved.' }}">
+      <input type="hidden" name="rationale" value="{{ diagnosis.concentration_warnings[0].summary if diagnosis.concentration_warnings else diagnosis.regulated_advice_boundary }}">
+      <input type="hidden" name="open_questions" value="{{ diagnosis.follow_up_questions|join(', ') }}">
+      <input type="hidden" name="redirect_to" value="/consult?session_id={{ current_session.id }}">
+      <button type="submit">Save to journal</button>
+    </form>
+    <a href="/agent?workflow=portfolio-consultation&session_id={{ current_session.id }}" class="meta">Open agent handoff →</a>
+  </div>
+</div>
+
+<!-- Factsheet tab (conditional) -->
+{% if factsheet_summary %}
+<div id="factsheet" class="tab-panel">
+  <section class="panel">
+    <h3>{{ factsheet_summary.fund_name }} <span class="meta">({{ factsheet_summary.identifier }})</span></h3>
+    <p class="meta">{{ factsheet_summary.source_type }} · {{ factsheet_summary.source_url }}</p>
+    <ul class="list">
+      <li>ISIN: {{ factsheet_summary.isin or "unverified" }}</li>
+      <li>Distribution: {{ factsheet_summary.distribution_policy or "unverified" }}</li>
+      <li>Replication: {{ factsheet_summary.replication_method or "unverified" }}</li>
+      <li>Domicile: {{ factsheet_summary.domicile or "unverified" }}</li>
+      <li>Benchmark: {{ factsheet_summary.benchmark_index or "unverified" }}</li>
+    </ul>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <form method="post" action="/actions/stage" class="inline-form">
+        <input type="hidden" name="kind" value="watch_add">
+        <input type="hidden" name="source" value="portfolio_consultation">
+        <input type="hidden" name="symbol" value="{{ factsheet_summary.identifier }}">
+        <input type="hidden" name="name" value="{{ factsheet_summary.fund_name }}">
+        <input type="hidden" name="currency" value="GBP">
+        <input type="hidden" name="asset_type" value="etf">
+        <input type="hidden" name="explanation" value="Stage verified consultant candidate from factsheet lookup.">
+        <input type="hidden" name="workflow" value="portfolio-consultation">
+        <input type="hidden" name="workflow_session_id" value="{{ current_session.id }}">
+        <input type="hidden" name="redirect_to" value="/consult?session_id={{ current_session.id }}">
+        <button type="submit">Stage watchlist add</button>
+      </form>
+      <a href="/research?symbol={{ factsheet_summary.identifier }}" class="meta">Open research for {{ factsheet_summary.identifier }} →</a>
+    </div>
+  </section>
+</div>
+{% endif %}
+
+<!-- Agent handoff tab -->
+<div id="agent-handoff" class="tab-panel">
+  <section class="panel">
+    <h3>Agent handoff</h3>
+    <p>Pass the current portfolio diagnosis to Codex, Claude Code, or OpenClaw for deeper analysis.</p>
+    <p><a href="/agent?workflow=portfolio-consultation&session_id={{ current_session.id }}">Open the consultant agent packet →</a></p>
+    <p class="meta">Downloads: <a href="/agent/context.json?workflow=portfolio-consultation&session_id={{ current_session.id }}">JSON context</a> · <a href="/agent/prompt/portfolio-consultation.md?session_id={{ current_session.id }}">Markdown prompt</a></p>
+  </section>
+</div>
+
+{% else %}
+<!-- Pre-run: show diagnosis defaults and profile -->
+<section class="grid two">
+  <article class="panel">
+    <h3>Saved profile</h3>
+    <p>Risk score: <strong>{{ saved_profile.risk_score or "unset" }}</strong></p>
+    <p class="meta">Exclusions: {{ saved_profile.exclusions|join(", ") or "none" }}</p>
+    <p class="meta">Product preferences: {{ saved_profile.product_preferences|join(", ") or "none" }}</p>
+    <p class="meta">Distribution: {{ saved_profile.distribution_preference or "unset" }}</p>
+  </article>
+  <article class="panel">
+    <h3>Watchlist intent</h3>
+    <ul class="list">
+      {% for signal in diagnosis.watchlist_signals %}
+      <li>{{ signal }}</li>
+      {% else %}
+      <li class="meta">No strong watchlist pattern detected yet.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endif %}
+{% endblock %}

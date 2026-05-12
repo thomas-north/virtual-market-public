@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="eyebrow">Portfolio cockpit</div>
+    <h2>Virtual Market — simulated portfolio workspace</h2>
+  </div>
+  <div class="pill">{{ overview.portfolio_snapshot.summary.freshness_label }}</div>
+</section>
+
+{% if not onboarding_state.portfolio_ready or not onboarding_state.watchlist_ready or not onboarding_state.profile_ready %}
+<section class="panel notice">
+  <h3>Finish first-run setup</h3>
+  <ul class="list">
+    {% for step in onboarding_state.suggested_next_steps %}
+    <li>{{ step }}</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/onboarding">Open onboarding →</a></p>
+</section>
+{% endif %}
+
+{% if overview.staged_actions_summary.pending_count > 0 %}
+<div class="callout">
+  <strong>{{ overview.staged_actions_summary.pending_count }} action{{ 's' if overview.staged_actions_summary.pending_count != 1 else '' }} awaiting review</strong>
+  <a href="/decisions">Review now →</a>
+</div>
+{% endif %}
+
+<section class="grid cards">
+  {% for card in overview.portfolio_snapshot.summary.cards %}
+  <article class="card">
+    <div class="label">{{ card.label }}</div>
+    <div class="value">{{ card.display }}</div>
+    {% if card.pct_display %}
+    <div class="meta">{{ card.pct_display }}</div>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+
+<section class="grid three">
+  {% for workflow in workflows_payload.workflow_cards %}
+  <a class="workflow-card-link" href="{{ workflow.route }}">
+    <strong>{{ workflow.title }}</strong>
+    <span class="meta">{{ workflow.summary }}</span>
+  </a>
+  {% endfor %}
+</section>
+{% endblock %}
